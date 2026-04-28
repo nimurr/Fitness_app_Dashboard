@@ -3,7 +3,7 @@ import { useState } from "react";
 import { IoIosLogOut } from "react-icons/io";
 import { IoSettingsSharp } from "react-icons/io5";
 import { Link, NavLink, useNavigate } from "react-router-dom";
-import logo from "/public/logo/dash_logo.png";
+import logo from "/public/logo/main_logo.png";
 import { useDispatch } from "react-redux";
 import { logoutUser } from "../../../redux/features/auth/authSlice";
 import { MdDashboard } from "react-icons/md";
@@ -36,11 +36,11 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
   };
 
   return (
-    <div>
+    <div className="relative">
       {/* Desktop Sidebar */}
-      <div className="hidden overflow-y-auto md:block w-full md:w-[200px] lg:w-[250px] xl:w-[280px] h-full bg-[#038c6d] fixed shadow-2xl">
+      <div className="hidden overflow-y-auto md:block w-full md:w-[200px] lg:w-[250px] xl:w-[280px] h-full bg-[#000000] border-r border-[#8a8a8a42] fixed shadow-2xl">
         <Link to={"/"} className="flex flex-col justify-center items-center pt-5 gap-2">
-          <img src={logo} alt="logo" className="w-20 h-20 shadow rounded mb-5 " />
+          <img src={logo} alt="logo" className="w-40 shadow rounded mb-20 mt-5" />
         </Link>
         <ul className="flex flex-col gap-5">
           {sidebarItems.map((item) => (
@@ -48,7 +48,7 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
               key={item.name}
               to={item.path}
               className={({ isActive }) =>
-                `w-[80%] mx-auto px-5 py-2 flex justify-start items-center gap-3 rounded text-white ${isActive ? "bg-white !text-black " : ""
+                `w-[80%] mx-auto px-5 py-2 flex justify-start items-center gap-3 rounded text-white ${isActive ? "bg-red-500 !text-white " : ""
                 }`
               }
             >
@@ -60,24 +60,24 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
 
         <button
           onClick={() => setShowModal(true)}
-          className="flex items-center gap-1 font-bold px-10 py-4 text-black  ml-6 mt-5"
+          className="flex items-center gap-1 font-bold px-10 py-4 text-black  ml-6 mt-5 absolute bottom-2 pt-10"
         >
-          <IoIosLogOut className="size-8  p-1 text-white rounded-md" />
-          <span className="text-white">Logout</span>
+          <IoIosLogOut className="size-8  p-1 text-red-500 rounded-md" />
+          <span className="text-red-500">Logout</span>
         </button>
 
       </div>
 
       {/* Mobile Sidebar */}
       <div
-        className={`fixed top-0 overflow-y-auto left-0 z-40 w-64 h-full bg-[#038c6d] shadow-lg transform ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+        className={`fixed top-0 overflow-y-auto left-0 z-40 w-64 h-full bg-[#000000] border-r border-[#8a8a8a42] shadow-lg transform ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"
           } transition-transform duration-300 ease-in-out md:hidden`}
       >
         <div onClick={toggleSidebar} className="absolute top-0 right-0 p-4">
           <RxCross1 className="size-6 text-white" />
         </div>
         <div className="flex flex-col justify-center items-center pt-5 gap-2 ">
-          <img src={logo} alt="logo" className=" w-20 h-20 rounded shadow mb-5" />
+          <img src={logo} alt="logo" className=" w-32 rounded shadow my-10" />
         </div>
         <ul className="flex flex-col gap-3 mt-10">
           {sidebarItems.map((item) => (
@@ -86,7 +86,7 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
               to={item.path}
               onClick={toggleSidebar}
               className={({ isActive }) =>
-                `w-[70%] mx-auto px-5 py-2 flex items-center gap-3 text-white ${isActive ? "bg-[#038c6d] " : ""
+                `w-[80%] mx-auto px-5 py-2 flex rounded items-center gap-3 text-white ${isActive ? "bg-[#8c0303] " : ""
                 }`
               }
             >
@@ -101,7 +101,7 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
             setShowModal(true);
             toggleSidebar();
           }}
-          className="flex items-center gap-2 px-10 ml-5 mt-5"
+          className="flex items-center gap-2 px-10 ml-5 mt-5 absolute bottom-2 pt-10"
         >
           <IoIosLogOut className="size-8   p-1 text-red-500 rounded-md" />
           <span className="text-red-500">Logout</span>
