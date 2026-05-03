@@ -30,10 +30,10 @@ const EditPrivacyPolicy = () => {
   };
 
   return (
-    <section className="w-full h-full min-h-screen ">
+    <section className="w-full h-full min-h-screen text-white">
       {/* Header Section */}
       <div className="flex justify-between items-center py-5">
-        <Link to="/settings" className="flex gap-4 items-center">
+        <Link to="/settings" className="flex gap-4 items-center text-white">
           <IoChevronBack className="text-2xl" />
           <h1 className="text-2xl font-semibold">Privacy Policy</h1>
         </Link>
@@ -70,7 +70,7 @@ const EditPrivacyPolicy = () => {
           <div className="w-full flex justify-end mt-20 md:mt-16">
             <button
               type="submit"
-              className="bg-[#038c6d] text-white text-xl gap-2 py-2 px-8 rounded-md font-bold"
+              className="bg-[#8c0303] text-white text-xl gap-2 py-2 px-8 rounded-md font-bold"
               disabled={isLoading}
             >
               {isLoading ? "Updating..." : "Update"}

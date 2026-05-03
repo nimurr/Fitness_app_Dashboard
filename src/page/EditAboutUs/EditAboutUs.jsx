@@ -39,12 +39,12 @@ const EditAboutUs = () => {
  
 
   return (
-    <section className="w-full h-full min-h-screen">
+    <section className="w-full h-full min-h-screen text-white">
       {/* Header Section */}
       <div className="flex justify-between items-center py-5">
-        <Link to="/settings" className="flex gap-4 items-center">
+        <Link to="/settings" className="flex gap-4 items-center text-white">
           <IoChevronBack className="text-2xl" />
-          <h1 className="text-2xl font-semibold">About Us</h1>
+          <h1 className="text-2xl font-semibold text-white">About Us</h1>
         </Link>
       </div>
 
@@ -81,7 +81,7 @@ const EditAboutUs = () => {
             <Button
               type="primary"
               htmlType="submit"
-              className="bg-[#038c6d] text-white px-5 text-xl py-2 rounded-md"
+              className="bg-[#8c0303] text-white px-5 text-xl py-2 rounded-md"
               loading={isLoading || isFetching} // Show loading state
             >
               {isLoading || isFetching ? "Updating..." : "Update"}

@@ -20,17 +20,17 @@ const AboutUsPage = () => {
 
 
   return (
-    <section className="w-full h-full min-h-screen">
+    <section className="w-full h-full min-h-screen text-white">
       <div className="flex justify-between items-center py-5">
-        <Link to="/settings" className="flex gap-4 items-center">
+        <Link to="/settings" className="flex gap-4 items-center text-white">
           <>
             <IoChevronBack className="text-2xl" />
           </>
-          <h1 className="text-2xl font-semibold">About Us</h1>
+          <h1 className="text-2xl font-semibold text-white">About Us</h1>
         </Link>
         <Link to={"/settings/edit-about-us/11"}>
           <button
-            className="bg-[#038c6d] text-white flex items-center gap-2 p-2 rounded-md font-bold"
+            className="bg-[#8c0303] text-white flex items-center gap-2 p-2 rounded-md font-bold"
             border
           >
             <TbEdit className="size-5" />

@@ -74,7 +74,7 @@ const PersonalinfoEdit = () => {
     };
 
     return (
-        <div className="font-[Aldrich]">
+        <div className="font-[Aldrich] text-white">
             {/* ✅ Back Button */}
             <div onClick={() => navigate("/settings/personal-info")} className="flex items-center cursor-pointer ml-6 my-8">
                 <MdOutlineKeyboardArrowLeft size={30} />
@@ -134,7 +134,7 @@ const PersonalinfoEdit = () => {
 
                     {/* ✅ Save Changes Button */}
                     <div className="flex sm:justify-end justify-center items-center mt-8">
-                        <Button htmlType="submit" className="h-14 md:px-20 !bg-[#038c6d] !text-white rounded-lg text-lg font-medium">
+                        <Button htmlType="submit" className="h-14 md:px-20 !bg-[#8c0303] !text-white rounded-lg text-lg font-medium">
                             Save Changes
                         </Button>
                     </div>

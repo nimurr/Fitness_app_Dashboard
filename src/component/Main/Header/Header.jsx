@@ -107,7 +107,7 @@ const NotificationDrawer = ({ open, onClose }) => {
           <div className="flex items-center gap-3">
             <h2 className="text-white text-base font-bold">Notifications</h2>
             {unreadCount > 0 && (
-              <span className="px-2 py-0.5 rounded-full bg-[#2d2a71] text-white text-xs font-semibold">
+              <span className="px-2 py-0.5 rounded-full bg-[#ff3131] text-white text-xs font-semibold">
                 {unreadCount} new
               </span>
             )}
@@ -146,16 +146,16 @@ const NotificationDrawer = ({ open, onClose }) => {
                   key={notif.id}
                   onClick={() => markOne(notif.id)}
                   className={`relative flex items-start gap-3 px-5 py-4 cursor-pointer transition-colors
-                    ${notif.read ? "bg-transparent hover:bg-[#161616]" : "bg-[#1a1830] hover:bg-[#1e1c38]"}`}
+                    ${notif.read ? "bg-transparent hover:bg-[#161616]" : "bg-[#301818] hover:bg-[#381c1c]"}`}
                 >
                   {/* Unread dot */}
                   {!notif.read && (
-                    <span className="absolute top-4 right-5 w-2 h-2 rounded-full bg-[#6c63ff] flex-shrink-0" />
+                    <span className="absolute top-4 right-5 w-2 h-2 rounded-full bg-[#ff3131] flex-shrink-0" />
                   )}
 
                   {/* Avatar / Icon */}
                   <div className={`w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5
-                    ${notif.read ? "bg-[#1f1f1f]" : "bg-[#2d2a71]"}`}>
+                    ${notif.read ? "bg-[#1f1f1f]" : "bg-[#ff3131]"}`}>
                     {notif.avatar
                       ? <img src={notif.avatar} alt="" className="w-full h-full object-cover rounded-full" />
                       : <MdNotificationsNone size={16} className={notif.read ? "text-[#555]" : "text-white"} />
@@ -234,7 +234,7 @@ const Header = ({ toggleSidebar }) => {
           >
             <MdNotificationsNone className="size-8 text-gray-400" />
             {unreadCount > 0 && (
-              <span className="absolute top-1 right-1 w-4 h-4 text-white text-[10px] font-bold flex items-center justify-center bg-[#2d2a71] rounded-full">
+              <span className="absolute top-1 right-1 w-4 h-4 text-white text-[10px] font-bold flex items-center justify-center bg-[#ff2222] rounded-full">
                 {unreadCount > 9 ? "9+" : unreadCount}
               </span>
             )}

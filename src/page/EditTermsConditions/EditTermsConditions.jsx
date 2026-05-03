@@ -41,14 +41,14 @@ const EditTermsConditions = () => {
   };
 
   return (
-    <section className="w-full h-full min-h-screen ">
+    <section className="w-full h-full min-h-screen text-white">
       {/* Header Section */}
       <div className="flex justify-between items-center py-5">
-        <Link to="/settings" className="flex gap-4 items-center">
+        <Link to="/settings" className="flex gap-4 items-center text-white">
           <>
             <IoChevronBack className="text-2xl" />
           </>
-          <h1 className="text-2xl font-semibold">Terms of Conditions</h1>
+          <h1 className="text-2xl font-semibold ">Terms of Conditions</h1>
         </Link>
       </div>
 
@@ -84,7 +84,7 @@ const EditTermsConditions = () => {
             <button
               // type="primary"
               // htmlType="submit"
-              className="bg-[#038c6d] text-white text-xl font-semibold px-5 py-3 rounded-md md:mt-14"
+              className="bg-[#8c0303] text-white text-xl font-semibold px-5 py-3 rounded-md md:mt-14"
             >
               Update
             </button>
