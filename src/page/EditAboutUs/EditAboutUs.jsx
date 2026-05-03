@@ -36,7 +36,7 @@ const EditAboutUs = () => {
       message.error("Failed to update About Us.");
     }
   };
- 
+
 
   return (
     <section className="w-full h-full min-h-screen text-white">
@@ -54,6 +54,7 @@ const EditAboutUs = () => {
           {/* React Quill for About Us Content */}
           <Form.Item name="content">
             <ReactQuill
+              className="text-white"
               value={content} // Directly use content as the value
               defaultValue={content} // Default value              
               onChange={setContent} // Update state

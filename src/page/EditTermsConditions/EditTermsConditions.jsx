@@ -58,6 +58,7 @@ const EditTermsConditions = () => {
           {/* React Quill for Terms and Conditions Content */}
           <Form.Item name="content" initialValue={content}>
             <ReactQuill
+              className="text-white"
               value={content}
               onChange={(value) => setContent(value)}
               modules={{

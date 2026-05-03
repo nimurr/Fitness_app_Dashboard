@@ -45,6 +45,7 @@ const EditPrivacyPolicy = () => {
           {/* React Quill for Privacy Policy Content */}
           <Form.Item name="content" initialValue={content}>
             <ReactQuill
+              className="text-white"
               value={content}
               onChange={(value) => setContent(value)}
               modules={{

@@ -41,7 +41,7 @@ const PrivacyPolicyPage = () => {
           <Spin size="large" />
         </div>
       ) : (
-        <div className="w-full h-full ml-3">
+        <div className="w-full h-full ml-3 ">
           <div dangerouslySetInnerHTML={{ __html: privacyPolicy?.privacyPolicy }} />
 
         </div>

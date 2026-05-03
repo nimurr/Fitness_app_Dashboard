@@ -87,7 +87,7 @@ const AllFaq = () => {
                 </Link>
                 <div>
                     <button
-                        className="bg-[#038c6d] text-white px-10 py-3 text-xl rounded-lg flex items-center gap-2"
+                        className="bg-[#8c0303] text-white px-10 py-3 text-base rounded-lg flex items-center gap-2"
                         onClick={showModal} // Open modal when clicking the button
                     >
                         <FaPlus className='text-xl font-semibold text-white' /> Add FAQ
@@ -152,7 +152,7 @@ const AllFaq = () => {
                         <Button onClick={handleCancel} className="bg-gray-400 text-white ">
                             Cancel
                         </Button>
-                        <Button type="primary" htmlType="submit" className="bg-[#038c6d] text-white ">
+                        <Button type="primary" htmlType="submit" className="bg-[#8c0303] text-white ">
                             Add FAQ
                         </Button>
                     </div>
