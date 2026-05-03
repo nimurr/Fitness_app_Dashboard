@@ -138,21 +138,24 @@ const AllFaq = () => {
                         label="Question"
                         rules={[{ required: true, message: 'Please enter the question!' }]}
                     >
-                        <Input placeholder="Enter the question" />
+                        <Input
+                            className='py-3'
+                            placeholder="Enter the question" />
                     </Form.Item>
                     <Form.Item
                         name="answer"
                         label="Answer"
+                        className='py-3'
                         rules={[{ required: true, message: 'Please enter the answer!' }]}
                     >
                         <Input.TextArea placeholder="Enter the answer" rows={4} />
                     </Form.Item>
 
                     <div className="flex justify-end gap-4">
-                        <Button onClick={handleCancel} className="bg-gray-400 text-white ">
+                        <Button onClick={handleCancel} className="bg-gray-800 h-10 px-8 text-white ">
                             Cancel
                         </Button>
-                        <Button type="primary" htmlType="submit" className="bg-[#8c0303] text-white ">
+                        <Button type="primary" htmlType="submit" className="bg-[#8c0303] h-10 px-8 text-white ">
                             Add FAQ
                         </Button>
                     </div>
