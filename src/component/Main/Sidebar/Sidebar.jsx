@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import { useState } from "react";
-import { IoIosLogOut } from "react-icons/io";
+import { IoIosLogOut, IoIosWarning } from "react-icons/io";
 import { IoSettingsSharp } from "react-icons/io5";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import logo from "/public/logo/main_logo.png";
@@ -8,6 +8,11 @@ import { useDispatch } from "react-redux";
 import { logoutUser } from "../../../redux/features/auth/authSlice";
 import { MdDashboard } from "react-icons/md";
 import { RxCross1 } from "react-icons/rx";
+import { HiMiniUserGroup } from "react-icons/hi2";
+import { GiMeal } from "react-icons/gi";
+import { AiFillCrown } from "react-icons/ai";
+import { FaProductHunt, FaUsersViewfinder } from "react-icons/fa6";
+
 
 const sidebarItems = [
   {
@@ -15,6 +20,40 @@ const sidebarItems = [
     name: "Dashboard",
     icon: <MdDashboard className="size-6" />,
   },
+  {
+    path: "/user-list",
+    name: "User List",
+    icon: <HiMiniUserGroup className="size-6" />,
+  },
+  {
+    path: "/meal-plan",
+    name: "Meal Plan",
+    icon: <GiMeal roup className="size-6" />,
+  },
+  {
+    path: "/subscriptions",
+    name: "Subscriptions",
+    icon: <AiFillCrown roup className="size-6" />,
+  },
+  {
+    path: "/subscription-list",
+    name: "Subscription List",
+    icon: <FaUsersViewfinder roup className="size-6" />,
+  },
+  {
+    path: "/promo-list",
+    name: "Promo List",
+    icon: <FaProductHunt roup className="size-6" />,
+  },
+  {
+    path: "/report-issue",
+    name: "Report & Issue",
+    icon: <IoIosWarning roup className="size-6" />,
+  },
+
+
+
+
   //? Start here
 
 

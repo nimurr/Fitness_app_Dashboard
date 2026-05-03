@@ -17,6 +17,12 @@ import EditAboutUs from "../page/EditAboutUs/EditAboutUs";
 import Personalinfo from "../page/ProfileInfo/Personalinfo";
 import PersonalinfoEdit from "../page/ProfileInfo/PersonalinfoEdit";
 import AllFaq from "../page/Faq/AllFaq";
+import UserRequestList from "../page/Users/UserRequestList";
+import MealPlan from "../page/MealPlan/MealPlan";
+import Subscriptions from "../page/Subscriptions/Subscriptions";
+import SubscriptionsList from "../page/Subscriptions/SubscriptionsList";
+import PromoList from "../page/Subscriptions/PromoList";
+import ReportAndIssue from "../page/ReportAndIssue/ReportAndIssue";
 
 
 const router = createBrowserRouter([
@@ -32,7 +38,30 @@ const router = createBrowserRouter([
         element: <DashboardHome />,
       },
       //? Start here
-
+      {
+        path: "/user-list",
+        element: <UserRequestList />,
+      },
+      {
+        path: "/meal-plan",
+        element: <MealPlan />,
+      },
+      {
+        path: "/subscriptions",
+        element: <Subscriptions />,
+      },
+      {
+        path: "/subscription-list",
+        element: <SubscriptionsList />,
+      },
+      {
+        path: "/promo-list",
+        element: <PromoList />,
+      },
+      {
+        path: "/report-issue",
+        element: <ReportAndIssue />,
+      },
 
 
 

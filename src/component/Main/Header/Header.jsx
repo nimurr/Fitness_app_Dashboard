@@ -141,7 +141,7 @@ const NotificationDrawer = ({ open, onClose }) => {
             </div>
           ) : (
             <div className="divide-y divide-[#1a1a1a]">
-              {notifications.map(notif => (
+              {notifications?.map(notif => (
                 <div
                   key={notif.id}
                   onClick={() => markOne(notif.id)}
