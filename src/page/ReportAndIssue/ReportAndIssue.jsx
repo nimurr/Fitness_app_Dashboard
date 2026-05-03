@@ -121,7 +121,7 @@ function SendModal({ report, onClose, onSend }) {
                         placeholder="Problem Type"
                     />
                     <Field
-                        value={desc}
+                        // value={desc}
                         onChange={(e) => setDesc(e.target.value)}
                         placeholder="Description"
                         multiline
