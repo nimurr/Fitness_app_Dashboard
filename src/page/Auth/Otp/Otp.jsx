@@ -1,10 +1,7 @@
-import otpImage from "/public/Auth/otp.png";
+import { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import authLogo from "../../../assets/auth/auth-logo.png";
 import { IoIosArrowBack } from "react-icons/io";
 import OTPInput from "react-otp-input";
-import { useState } from "react";
-import CustomButton from "../../../utils/CustomButton";
 import {
   useForgotPasswordMutation,
   useVerifyEmailMutation,
@@ -17,15 +14,10 @@ const Otp = () => {
   const navigate = useNavigate();
   const [forgotPassword] = useForgotPasswordMutation();
   const [verifyOtp, { isLoading }] = useVerifyEmailMutation();
-  const handleOtpChange = (otpValue) => {
-    setOtp(otpValue);
-  };
+
   const handleMatchOtp = async () => {
     try {
-      const res = await verifyOtp({
-        otp
-      }).unwrap();
-      console.log(res);
+      const res = await verifyOtp({ otp }).unwrap();
       if (res.error) {
         toast.error(res?.error?.data?.message);
       }
@@ -44,7 +36,6 @@ const Otp = () => {
       const res = await forgotPassword({ email });
       if (res.error) {
         toast.error(res?.error?.data?.message);
-        console.log(res.error);
       }
       if (res.data) {
         toast.success(res.data.message);
@@ -53,56 +44,79 @@ const Otp = () => {
       toast.error("Something went wrong");
     }
   };
+
   return (
-    <div className="w-full  h-full md:h-screen md:flex justify-around ">
-      {/* <img
-          src={authLogo}
-          className="w-[147px] h-[152px] mx-auto md:my-20 md:mx-5"
-          alt="Sign in illustration"
-    /> */}
-      <div className="w-full max-w-7xl mx-auto border-shadow rounded-md h-[70%] md:my-28 grid grid-cols-1 md:grid-cols-2 place-content-center px-5 py-15 gap-8 bg-white md:mx-10 ">
-        <div>
-          <img src={otpImage} className="w-3/4 h-[461px] mx-auto" alt="" />
+    <div className="min-h-screen w-full bg-[#0d0d0d] flex items-center justify-center px-4">
+      {/* Card */}
+      <div className="w-full max-w-[480px] bg-[#181818] border border-[#2a2a2a] rounded-2xl px-10 py-10">
+
+        {/* Logo */}
+        <div className="flex justify-center mb-7">
+          <img className="w-36" src="/public/Auth/authlogo.png" alt="" />
         </div>
-        <div className="mt-16 md:mt-32">
-          <div className="mb-5 space-y-5">
-            <h1 className="font-semibold text-xl flex items-center gap-2">
-              <Link to="/auth/login">
-                <IoIosArrowBack />
-              </Link>
-              Verify
-            </h1>
-            <h1>{`We'll send a verification code to your email. Check your inbox and enter the code here.`}</h1>
+
+        {/* Back + Title */}
+        <div className="text-center mb-2">
+          <div className="flex items-center justify-center gap-2 mb-1">
+            <Link
+              to="/auth/forget-password"
+              className="text-gray-400 hover:text-white transition-colors"
+            >
+              <IoIosArrowBack className="text-xl" />
+            </Link>
+            <h1 className="text-white text-2xl font-bold">Verify OTP</h1>
           </div>
+          <p className="text-gray-500 text-sm leading-relaxed mt-2">
+            We'll send a verification code to your email. Check your inbox and
+            enter the code here.
+          </p>
+        </div>
+
+        {/* Divider */}
+        <div className="border-t border-[#2a2a2a] my-6" />
+
+        {/* OTP Inputs */}
+        <div className="flex justify-center mb-7">
           <OTPInput
             value={otp}
-            onChange={handleOtpChange}
+            onChange={setOtp}
             numInputs={6}
-            renderInput={(props) => <input {...props} />}
-            containerStyle="otp-container"
-            inputStyle={{
-              width: "100%",
-              maxWidth: "6.5rem",
-              height: "3rem",
-              margin: "0 0.5rem",
-              fontSize: "2rem",
-              fontWeight: "bold",
-              borderBottom: "1px solid #4E4E4E",
-              textAlign: "center",
-              outline: "none",
-            }}
+            renderInput={(props) => (
+              <input
+                {...props}
+                style={{}}
+                className="
+                  !w-11 !h-12 mx-1.5
+                  bg-transparent
+                  border-b-2 border-[#3a3a3a]
+                  focus:border-red-600
+                  text-white text-xl font-bold
+                  text-center outline-none
+                  transition-colors
+                "
+              />
+            )}
           />
-          <div onClick={handleMatchOtp} className="mt-5">
-            <button className="w-full bg-[#84df91] text-xl font-semibold text-white rounded-md py-2" loading={isLoading} border >
-              Verify
-            </button>
-          </div>
-          <div className="flex justify-between items-center my-4">
-            <h1>Didn’t receive code?</h1>
-            <button onClick={handleResendPassword} className="text-[#4c7e95]">
-              Verify Code
-            </button>
-          </div>
+        </div>
+
+        {/* Verify Button */}
+        <button
+          onClick={handleMatchOtp}
+          disabled={isLoading || otp.length < 6}
+          className="w-full bg-red-600 hover:bg-red-700 active:bg-red-800 disabled:opacity-50 text-white text-base font-semibold rounded-full py-3 transition-colors"
+        >
+          {isLoading ? "Verifying..." : "Verify"}
+        </button>
+
+        {/* Resend */}
+        <div className="flex items-center justify-between mt-5">
+          <p className="text-gray-500 text-sm">Didn't receive code?</p>
+          <button
+            onClick={handleResendPassword}
+            className="text-red-500 hover:text-red-400 transition-colors text-sm font-medium"
+          >
+            Resend Code
+          </button>
         </div>
       </div>
     </div>

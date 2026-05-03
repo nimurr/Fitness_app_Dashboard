@@ -1,12 +1,7 @@
-import signinImage from "/public/Auth/login.png";
-import authLogo from "../../../assets/auth/auth-logo.png";
-import logoimage from '/public/logo/Logo-Orange.png';
-
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Form, Checkbox } from "antd";
-import { HiOutlineLockClosed, HiOutlineMail } from "react-icons/hi";
-import CustomButton from "../../../utils/CustomButton";
-import CustomInput from "../../../utils/CustomInput";
+import { HiOutlineLockClosed, HiOutlineMail, HiEye, HiEyeOff } from "react-icons/hi";
 import { useLoginMutation } from "../../../redux/features/auth/authApi";
 import { toast } from "sonner";
 import { useDispatch } from "react-redux";
@@ -16,126 +11,122 @@ const SignIn = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [login, { isLoading }] = useLoginMutation();
+  const [showPassword, setShowPassword] = useState(false);
+
   const handleSubmit = async (values) => {
     const { email, password } = values;
-    const data = {
-      email, password
-    }
     try {
-      const res = await login(data).unwrap();
-      console.log(res?.token);
-
-      navigate("/");
-
+      const res = await login({ email, password }).unwrap();
       if (res.error) {
         toast.error(res.error.data.message);
-        console.log(res.error.data.message);
       }
       if (res) {
-        dispatch(
-          loggedUser({
-            token: res?.token
-          })
-        );
+        dispatch(loggedUser({ token: res?.token }));
         toast.success(res?.message);
       }
-
       navigate("/");
-
-
     } catch (error) {
       toast.error("Something went wrong");
     }
   };
 
   return (
-    <div className="w-full  h-full md:h-screen md:flex justify-around overflow-visible">
-      {/* <img
-            src={authLogo}
-            className="w-[147px] h-[144px] mx-auto md:my-20 md:mx-5"
-            alt="Sign in illustration"
-      /> */}
-      <div className="w-full max-w-7xl mx-auto border-shadow rounded-md h-[70%] md:my-28 grid grid-cols-1 md:grid-cols-2 place-content-center px-5 py-10 gap-8 bg-white md:mx-10">
-        <div className="hidden md:flex justify-center">
-          <img
-            src={signinImage}
-            className="w-full h-full mx-auto"
-            alt="Sign in illustration"
-          />
+    <div className="min-h-screen w-full bg-[#0d0d0d] flex items-center justify-center px-4">
+      {/* Card */}
+      <div className="w-full max-w-[480px] bg-[#181818] border border-[#2a2a2a] rounded-2xl px-10 py-10">
+
+        {/* Logo */}
+        <div className="flex justify-center mb-7">
+          <img className="w-36" src="/public/Auth/authlogo.png" alt="" />
         </div>
-        <div className="mt-16 px-8">
-          <div className="mb-8">
-            <img src={logoimage} className="w-[200px] mb-5" alt="" />
-            <h1 className="font-semibold text-3xl text-gray-800">
-              Hello, Welcome!
-            </h1>
-            <p className="text-gray-500">
-              Please Enter Your Details Below to Continue
-            </p>
-          </div>
-          <Form
-            layout="vertical"
-            onFinish={handleSubmit}
-            className="space-y-4"
-            initialValues={{
-              remember: true,
-            }}
+
+        {/* Title */}
+        <div className="text-center mb-7">
+          <h1 className="text-white text-2xl font-bold mb-1">Welcome!</h1>
+          <p className="text-gray-500 text-sm">Fill Detail Below To Login.</p>
+        </div>
+
+        {/* Form */}
+        <Form
+          layout="vertical"
+          onFinish={handleSubmit}
+          initialValues={{ remember: true }}
+          className="space-y-1"
+        >
+          {/* Email */}
+          <Form.Item
+            name="email"
+            rules={[
+              { required: true, message: "Please input your email!" },
+              { type: "email", message: "The input is not a valid email!" },
+            ]}
+            className="mb-4"
           >
-            <Form.Item
-              label="Email"
-              name="email"
-              rules={[
-                {
-                  required: true,
-                  message: "Please input your email!",
-                },
-                {
-                  type: "email",
-                  message: "The input is not a valid email!",
-                },
-              ]}
-            >
-              <CustomInput
+            <div className="flex items-center bg-transparent border border-[#333] rounded-lg px-4 py-3 gap-3 focus-within:border-[#555] transition-colors">
+              <HiOutlineMail className="text-gray-500 text-lg shrink-0" />
+              <input
                 type="email"
-                icon={HiOutlineMail}
-                placeholder={"Enter Email"}
+                placeholder="Enter Your Email Address"
+                className="bg-transparent text-gray-300 text-sm placeholder-gray-600 outline-none w-full"
               />
-            </Form.Item>
-
-            <Form.Item
-              label="Password"
-              name="password"
-              rules={[
-                {
-                  required: true,
-                  message: "Please input your password!",
-                },
-              ]}
-            >
-              <CustomInput
-                type="password"
-                icon={HiOutlineLockClosed}
-                placeholder={"Enter password"}
-                isPassword
-              />
-            </Form.Item>
-
-            <div className="flex justify-between items-center">
-              <Form.Item name="remember" valuePropName="checked" noStyle>
-                <Checkbox>Remember me</Checkbox>
-              </Form.Item>
-              <Link to="/auth/forget-password" className="underline">
-                Forgot password?
-              </Link>
             </div>
+          </Form.Item>
 
-            <Form.Item>
-              <button loading={isLoading} className="w-full bg-[#84df91] text-xl font-semibold text-white  rounded-md py-2" border={true}>
-                Login
+          {/* Password */}
+          <Form.Item
+            name="password"
+            rules={[{ required: true, message: "Please input your password!" }]}
+            className="mb-4"
+          >
+            <div className="flex items-center bg-transparent border border-[#333] rounded-lg px-4 py-3 gap-3 focus-within:border-[#555] transition-colors">
+              <HiOutlineLockClosed className="text-gray-500 text-lg shrink-0" />
+              <input
+                type={showPassword ? "text" : "password"}
+                placeholder="Enter Your Password"
+                className="bg-transparent text-gray-300 text-sm placeholder-gray-600 outline-none w-full"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((v) => !v)}
+                className="text-gray-500 hover:text-gray-300 transition-colors shrink-0"
+              >
+                {showPassword ? (
+                  <HiEyeOff className="text-lg" />
+                ) : (
+                  <HiEye className="text-lg" />
+                )}
               </button>
+            </div>
+          </Form.Item>
+
+          {/* Remember me + Forgot password */}
+          <br />
+          <div className="flex items-center justify-between my-5 ">
+            <Form.Item name="remember" valuePropName="checked" noStyle>
+              <Checkbox className="text-gray-400 text-sm [&_.ant-checkbox-inner]:bg-transparent [&_.ant-checkbox-inner]:border-gray-500">
+                <span className="text-gray-400 text-sm">Remember Me</span>
+              </Checkbox>
             </Form.Item>
-          </Form>
-        </div>
+            <Link
+              to="/auth/forget-password"
+              className="text-gray-400 text-sm hover:text-white transition-colors no-underline"
+            >
+              Forgot Password?
+            </Link>
+          </div>
+
+          {/* Login Button */}
+          <br />
+          <Form.Item className="mb-0">
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="w-full bg-red-600 hover:bg-red-700 active:bg-red-800 disabled:opacity-60 text-white text-base font-semibold rounded-full py-3 transition-colors"
+            >
+              {isLoading ? "Logging in..." : "Login"}
+            </button>
+          </Form.Item>
+        </Form>
       </div>
     </div>
   );

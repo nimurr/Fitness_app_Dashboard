@@ -1,12 +1,7 @@
-/* eslint-disable react/no-unescaped-entities */
-import forgetPasswordImage from "/public/Auth/forgot-password.png";
-import authLogo from "../../../assets/auth/auth-logo.png";
 import { Link, useNavigate } from "react-router-dom";
 import { IoIosArrowBack } from "react-icons/io";
-import { Form } from "antd";
-import CustomInput from "../../../utils/CustomInput";
 import { HiOutlineMail } from "react-icons/hi";
-import CustomButton from "../../../utils/CustomButton";
+import { Form } from "antd";
 import { useForgotPasswordMutation } from "../../../redux/features/auth/authApi";
 import { toast } from "sonner";
 
@@ -19,7 +14,6 @@ const ForgetPassword = () => {
       const res = await forgotPassword(values);
       if (res.error) {
         toast.error(res?.error?.data?.message);
-        console.log(res.error);
       }
       if (res.data) {
         toast.success(res.data.message);
@@ -31,74 +25,83 @@ const ForgetPassword = () => {
   };
 
   return (
-    <div className="w-full  h-full md:h-screen md:flex justify-around ">
-      {/* <img
-            src={authLogo}
-            className="w-[147px] h-[152px] mx-auto md:my-20 md:mx-5"
-            alt="Sign in illustration"
-      /> */}
-    <div className="w-full max-w-7xl mx-auto border-shadow rounded-md h-[70%] md:my-28 grid grid-cols-1 md:grid-cols-2 place-content-center px-5 py-10 gap-8 bg-white md:mx-10">
-      <div>
-        <img
-          src={forgetPasswordImage}
-          className="w-full h-[444px] mx-auto"
-          alt="Forgot Password Illustration"
-        />
-      </div>
-      <div className="mt-16">
-        <div className="mb-5 space-y-5">
-          <h1 className="font-semibold text-2xl flex items-center gap-2">
-            <Link to="/auth/login">
-              <IoIosArrowBack />
-            </Link>
-            Forgot Password
-          </h1>
-          <h1 className="text-xl">
-            Enter the email address associated with your account. We'll send you
-            an verification code to your email.
-          </h1>
+    <div className="min-h-screen w-full bg-[#0d0d0d] flex items-center justify-center px-4">
+      {/* Card */}
+      <div className="w-full max-w-[480px] bg-[#181818] border border-[#2a2a2a] rounded-2xl px-10 py-10">
+
+        {/* Logo */}
+        <div className="flex justify-center mb-7">
+          <img className="w-36" src="/public/Auth/authlogo.png" alt="" />
         </div>
 
-        {/* Ant Design Form */}
+        {/* Back + Title */}
+        <div className="text-center mb-2">
+          <div className="flex items-center justify-center gap-2 mb-1">
+            <Link
+              to="/auth/login"
+              className="text-gray-400 hover:text-white transition-colors"
+            >
+              <IoIosArrowBack className="text-xl" />
+            </Link>
+            <h1 className="text-white text-2xl font-bold">Forgot Password</h1>
+          </div>
+          <p className="text-gray-500 text-sm leading-relaxed mt-2">
+            Enter the email address associated with your account. We'll send you
+            a verification code to your email.
+          </p>
+        </div>
+
+        {/* Divider */}
+        <div className="border-t border-[#2a2a2a] my-6" />
+
+        {/* Form */}
         <Form
           layout="vertical"
-          onFinish={submit} // Ant Design form submission
-          initialValues={{ email: "" }} // Set initial form values
+          onFinish={submit}
+          initialValues={{ email: "" }}
         >
-          {/* CustomInput wrapped in Form.Item for validation */}
+          {/* Email */}
           <Form.Item
-            label="Email"
             name="email"
             rules={[
-              {
-                required: true,
-                message: "Please input your email!",
-              },
-              {
-                type: "email",
-                message: "Please enter a valid email address!",
-              },
+              { required: true, message: "Please input your email!" },
+              { type: "email", message: "Please enter a valid email address!" },
             ]}
+            className="mb-6"
           >
-            <CustomInput icon={HiOutlineMail} placeholder="Email" />
+            <div className="flex items-center bg-transparent border border-[#333] rounded-lg px-4 py-3 gap-3 focus-within:border-[#555] transition-colors">
+              <HiOutlineMail className="text-gray-500 text-lg shrink-0" />
+              <input
+                type="email"
+                placeholder="Enter Your Email Address"
+                className="bg-transparent text-gray-300 text-sm placeholder-gray-600 outline-none w-full"
+              />
+            </div>
           </Form.Item>
 
-          {/* CustomButton for submit */}
-          <Form.Item>
+          {/* Submit Button */}
+          <Form.Item className="mb-0">
             <button
-              loading={isLoading}
-              border
               type="submit"
-              className="w-full bg-[#84df91] text-xl font-semibold text-white rounded-md py-2"
+              disabled={isLoading}
+              className="w-full bg-red-600 hover:bg-red-700 active:bg-red-800 disabled:opacity-60 text-white text-base font-semibold rounded-full py-3 transition-colors"
             >
-              Send Verification Code
+              {isLoading ? "Sending..." : "Send Verification Code"}
             </button>
-
-          
           </Form.Item>
         </Form>
+
+        {/* Back to login */}
+        <p className="text-center text-gray-600 text-sm mt-5">
+          Remember your password?{" "}
+          <Link
+            to="/auth/login"
+            className="text-red-500 hover:text-red-400 transition-colors font-medium no-underline"
+          >
+            Back to Login
+          </Link>
+        </p>
       </div>
-    </div>
     </div>
   );
 };
