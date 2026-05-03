@@ -11,7 +11,7 @@ import { RxCross1 } from "react-icons/rx";
 import { HiMiniUserGroup } from "react-icons/hi2";
 import { GiMeal } from "react-icons/gi";
 import { AiFillCrown } from "react-icons/ai";
-import { FaProductHunt, FaUsersViewfinder } from "react-icons/fa6";
+import { FaAngleRight, FaChevronRight, FaProductHunt, FaUsersViewfinder } from "react-icons/fa6";
 
 
 const sidebarItems = [
@@ -93,6 +93,7 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
             >
               {item?.icon}
               <h>{item.name}</h>
+
             </NavLink>
           ))}
         </ul>
