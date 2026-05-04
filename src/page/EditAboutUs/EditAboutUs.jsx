@@ -26,7 +26,7 @@ const EditAboutUs = () => {
     console.log("Updated About Us Content:", content);
 
     try {
-      const res = await updateAboutUs({ aboutUs: content }).unwrap();
+      const res = await updateAboutUs({ description: content }).unwrap();
       if (res?.success) {
         message.success(res?.message);
         navigate("/settings/about-us");

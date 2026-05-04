@@ -22,11 +22,10 @@ const EditTermsConditions = () => {
   ); // Default content for the Terms and Conditions section
 
   const handleSubmit = async () => {
-    console.log("Updated Terms and Conditions Content:", content);
-    // Handle form submission, e.g., update the Terms and Conditions in the backend
+    console.log("Updated Terms and Conditions Content:", content); 
 
     try {
-      const res = await updateTramsAndCondition({ termsAndConditions: content }).unwrap();
+      const res = await updateTramsAndCondition({ description: content }).unwrap();
       console.log(res);
       if (res?.success) {
         message.success(res?.message);

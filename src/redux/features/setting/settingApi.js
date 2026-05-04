@@ -13,28 +13,27 @@ const settingApi = baseApi.injectEndpoints({
 
     updatePrivacyPolicyAll: builder.mutation({  // ✅ FIXED: Use mutation instead of query
       query: (data) => ({
-        url: "/general-info/update/privacy-policy",
-        method: "POST",
+        url: "/privacy/update",
+        method: "PATCH",
         body: data,
       }),
       invalidatesTags: ["Setting"],
     }),
-
-
 
 
     updateTramsAndConditionsAll: builder.mutation({  // ✅ FIXED: Use mutation instead of query
       query: (data) => ({
-        url: "/general-info/update/terms-and-conditions",
-        method: "POST",
+        url: "/terms/update",
+        method: "PATCH",
         body: data,
       }),
       invalidatesTags: ["Setting"],
     }),
+
     updateAboutUs: builder.mutation({  // ✅ FIXED: Use mutation instead of query
       query: (data) => ({
-        url: "/general-info/update/about-us",
-        method: "POST",
+        url: "/about/update",
+        method: "PATCH",
         body: data,
       }),
       invalidatesTags: ["Setting"],
