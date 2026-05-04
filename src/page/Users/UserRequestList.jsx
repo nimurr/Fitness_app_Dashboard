@@ -3,6 +3,7 @@ import { IoIosSearch } from "react-icons/io";
 import { FaAngleLeft, FaTimes } from "react-icons/fa";
 import { GoInfo } from "react-icons/go";
 import { FiUser, FiMail, FiPhone, FiMapPin, FiCalendar, FiHash } from "react-icons/fi";
+import { useGetAllUsersForAdminQuery } from "../../redux/features/user/userApi";
 
 const allUsers = [
   {
@@ -103,11 +104,11 @@ const UserModal = ({ user, onClose }) => {
 
           <div className="grid grid-cols-1 gap-3">
             {[
-              { icon: FiHash,     label: "Account ID",   value: `#${user.accountID}` },
-              { icon: FiMail,     label: "Email",        value: user.email },
-              { icon: FiPhone,    label: "Phone",        value: user.phone },
-              { icon: FiMapPin,   label: "Address",      value: user.address_line1 },
-              { icon: FiCalendar, label: "Joined",       value: formatDate(user.createdAt) },
+              { icon: FiHash, label: "Account ID", value: `#${user.accountID}` },
+              { icon: FiMail, label: "Email", value: user.email },
+              { icon: FiPhone, label: "Phone", value: user.phone },
+              { icon: FiMapPin, label: "Address", value: user.address_line1 },
+              { icon: FiCalendar, label: "Joined", value: formatDate(user.createdAt) },
             ].map(({ icon: Icon, label, value }) => (
               <div key={label}
                 className="flex items-center gap-3 bg-[#252527] rounded-xl px-4 py-3">
@@ -137,12 +138,19 @@ const UserModal = ({ user, onClose }) => {
 
 /* ── Main Component ── */
 const UserRequestList = () => {
-  const [searchText, setSearchText]   = useState("");
+
+  const { data } = useGetAllUsersForAdminQuery();
+  const userFullData = data?.data;
+
+  console.log(userFullData)
+
+
+  const [searchText, setSearchText] = useState("");
   const [selectedDate, setSelectedDate] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedUser, setSelectedUser] = useState(null);
 
-  const filtered = allUsers.filter((u) => {
+  const filtered = userFullData?.filter((u) => {
     const name = `${u.firstName} ${u.lastName}`.toLowerCase();
     const matchName = name.includes(searchText.toLowerCase());
     const matchDate = selectedDate
@@ -152,7 +160,7 @@ const UserRequestList = () => {
   });
 
   const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
-  const paginated  = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
+  const paginated = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
 
   const cols = ["#SI", "Account ID", "First Name", "Last Name", "Gender", "Email", "Phone", "Joined Date", "Action"];
 

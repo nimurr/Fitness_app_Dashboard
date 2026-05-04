@@ -46,9 +46,12 @@ const NewPassword = () => {
       toast.error("Passwords do not match!");
       return;
     }
+    const data = {
+      password
+    };
 
     try {
-      const res = await resetPassword({ jwtToken, newPassword: password });
+      const res = await resetPassword(data);
       if (res.error) {
         toast.error(res.error.data.message);
       }

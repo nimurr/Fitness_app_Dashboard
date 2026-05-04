@@ -9,6 +9,7 @@ import {
 import { toast } from "sonner";
 
 const Otp = () => {
+  const token = localStorage.getItem("token");
   const [otp, setOtp] = useState("");
   const { email } = useParams();
   const navigate = useNavigate();
@@ -16,18 +17,24 @@ const Otp = () => {
   const [verifyOtp, { isLoading }] = useVerifyEmailMutation();
 
   const handleMatchOtp = async () => {
+    const data = {
+      otp
+    }
     try {
-      const res = await verifyOtp({ otp }).unwrap();
+      const res = await verifyOtp(data).unwrap();
+      console.log(res)
       if (res.error) {
+        console.log(error)
         toast.error(res?.error?.data?.message);
       }
       if (res) {
-        localStorage.setItem("jwtToken", res?.changePasswordToken);
-        toast.success(res?.data?.message);
-        navigate(`/auth/new-password/${email}`);
+
+        toast.success(res?.message);
+        navigate(`/auth/new-password/${email}?token=${res?.data?.token}`);
       }
     } catch (error) {
-      toast.error("Something went wrong");
+      console.log(error)
+      toast.error(error?.data?.message);
     }
   };
 

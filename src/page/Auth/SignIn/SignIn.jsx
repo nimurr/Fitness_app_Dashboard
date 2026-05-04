@@ -23,10 +23,12 @@ const SignIn = () => {
         toast.error(res.error.data.message);
       }
       if (res) {
-        dispatch(loggedUser({ token: res?.token }));
+        // dispatch(loggedUser({ token: res?.token }));
+        localStorage.setItem("token", res?.data?.token);
+        localStorage.setItem("user", JSON.stringify(res?.data?.user));
         toast.success(res?.message);
+        navigate("/");
       }
-      // navigate("/");
     } catch (error) {
       console.log(error)
       toast.error("Something went wrong");

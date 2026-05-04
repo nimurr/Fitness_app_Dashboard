@@ -13,13 +13,18 @@ const ForgetPassword = () => {
     try {
       const res = await forgotPassword(values);
       if (res.error) {
-        toast.error(res?.error?.data?.message);
+        console.log(res?.error)
+        toast.error(res?.error?.data?.message || "Something went wrong");
       }
       if (res.data) {
+        console.log(res?.data)
         toast.success(res.data.message);
-        navigate(`/auth/otp/${values?.email}`);
+        // console.log(res?.data?.data?.token)
+        localStorage.setItem("token", res?.data?.data?.token);
+        navigate(`/auth/otp/${values.email}`);
       }
     } catch (error) {
+      console.log(error)
       toast.error("Something went wrong");
     }
   };

@@ -3,9 +3,10 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 export const baseApi = createApi({
   reducerPath: "pokemonApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: "https://faisalsooo.merinasib.ch/api/v1",
+    baseUrl: "https://faisal5000.merinasib.shop/api/v1",
     prepareHeaders: (headers, { getState }) => { 
-      const token = getState().auth.token;
+      // const token = getState().auth.token;
+      const token = localStorage.getItem("token");
       if (token) {
         headers.set("Authorization", `Bearer ${token}`);
       }

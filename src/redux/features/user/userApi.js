@@ -2,9 +2,9 @@ import { baseApi } from "../../baseApi/baseApi";
 
 const userApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    getAllUsers: builder.query({
-      query: ({ from, to }) => ({
-        url: `/get-user-data?from=${from}&to=${to}`,
+    getAllUsersForAdmin: builder.query({
+      query: () => ({
+        url: `/auth/user-list`,
         method: "GET",
       }),
       providesTags: ["User-2"],
@@ -40,4 +40,9 @@ const userApi = baseApi.injectEndpoints({
   }),
 });
 
-export const { useGetAllUsersQuery, useGetAllCollectorsQuery, useGetSingleUserQuery, useBlockUserMutation, useUnBlockUserMutation } = userApi;
+export const { 
+  useGetAllUsersForAdminQuery, 
+  useGetAllCollectorsQuery, 
+  useGetSingleUserQuery, 
+  useBlockUserMutation, 
+  useUnBlockUserMutation } = userApi;
