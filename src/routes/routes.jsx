@@ -75,10 +75,7 @@ const router = createBrowserRouter([
         path: "settings",
         element: <SettingsPage />,
       },
-      {
-        path: "settings/all-faq",
-        element: <AllFaq />,
-      },
+
       {
         path: "settings/personal-info",
         element: <Personalinfo />,
@@ -112,7 +109,10 @@ const router = createBrowserRouter([
         element: <EditAboutUs />
       },
 
-
+      {
+        path: "settings/all-faq",
+        element: <AllFaq />,
+      },
     ],
   },
   {

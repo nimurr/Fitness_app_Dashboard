@@ -9,7 +9,15 @@ const planApi = baseApi.injectEndpoints({
                 providesTags: ["Plan"],
             }),
         }),
+        createMealPlan: builder.mutation({
+            query: (data) => ({
+                url: "/plan/create-plan",
+                method: "POST",
+                body: data,
+            }),
+            invalidatesTags: ["Plan"],
+        }),
     }),
 });
 
-export const { useGetAllPlansQuery } = planApi;
+export const { useGetAllPlansQuery , useCreateMealPlanMutation } = planApi;
