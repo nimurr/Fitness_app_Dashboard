@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 import { Modal, Button, Input, Form, notification } from 'antd';
 import { FaPlus } from 'react-icons/fa';
 import { useAddFaqMainMutation, useDeleteFaqMutation, useGetAllFaqQuery, useGetAllSettingsQuery } from '../../redux/features/setting/settingApi';
+import { RiDeleteBin6Line } from 'react-icons/ri';
+import { toast } from 'sonner';
 
 const AllFaq = () => {
 
@@ -50,8 +52,6 @@ const AllFaq = () => {
                 form.resetFields();  // Reset the form fields
             }
 
-
-
         } catch (error) {
             console.log(error);
         }
@@ -60,12 +60,8 @@ const AllFaq = () => {
     };
 
     const handleDelete = async (faq) => {
-
-        console.log(faq);
-
         try {
-
-            const res = await faqsDelete({ question: faq?.question });
+            const res = await faqsDelete({ id: faq?._id });
             console.log(res);
             if (res?.data?.success) {
                 notification.success({
@@ -74,11 +70,9 @@ const AllFaq = () => {
                 refetch();
 
             }
-
-
-
         } catch (error) {
             console.log(error);
+            toast.error('Faild to Delete . Try again !')
         }
     };
 
@@ -104,17 +98,18 @@ const AllFaq = () => {
                 {/* <h2 className="text-2xl font-medium">All FAQs</h2> */}
                 <div className="my-5 ">
                     <div>
-                        {allFaq?.faqs?.map((faq, index) => (
-                            <div key={index} className=" flex items-center justify-between border-b py-10">
+                        {allFaq?.data?.map((faq, index) => (
+                            <div key={index} className=" flex items-center justify-between border-b border-gray-600 py-10 text-white">
                                 <div>
-                                    <p className="font-medium text-lg">{faq.question}</p>
-                                    <p>{faq.answer}</p>
+                                    <p className="font-medium text-xl mb-2">Q: {faq.question}</p>
+                                    <p>A: {faq.answer}</p>
                                 </div>
                                 <div>
                                     <button
                                         onClick={() => handleDelete(faq)} // Call delete function on button click
-                                        className='bg-[#dd1811] text-white md:px-10 px-6 py-3 rounded-lg'
+                                        className='bg-[#dd1811] text-white md:px-6 px-5 py-2 rounded-lg flex items-center justify-center gap-2'
                                     >
+                                        <RiDeleteBin6Line />
                                         Delete
                                     </button>
                                 </div>

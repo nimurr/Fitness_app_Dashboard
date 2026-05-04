@@ -4,8 +4,8 @@ const settingApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
 
     getAllSettings: builder.query({
-      query: () => ({
-        url: "/general-info",
+      query: (status) => ({
+        url: `/${status}`,
         method: "GET",
         providesTags: ["Setting"],
       }),
@@ -81,10 +81,9 @@ const settingApi = baseApi.injectEndpoints({
       }),
     }),
     deleteFaq: builder.mutation({  // ✅ FIXED: Use mutation instead of query
-      query: (data) => ({
-        url: `/general-info/delete-faq`,
-        method: "POST",
-        body: data,
+      query: ({ id }) => ({
+        url: `/faq/delete-faq/${id}`,
+        method: "DELETE",
       }),
       invalidatesTags: ["Setting"],
     }),
@@ -95,11 +94,11 @@ const settingApi = baseApi.injectEndpoints({
 
 export const {
   useGetAllSettingsQuery,
+
   useUpdatePrivacyPolicyAllMutation, // ✅ FIXED: Mutation hook 
   useUpdateTramsAndConditionsAllMutation,
-
-
   useUpdateAboutUsMutation,
+
   useGetUserProfileQuery,
   useUpdateProfileMutation,
 

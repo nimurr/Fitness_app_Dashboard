@@ -8,10 +8,8 @@ import { useGetAllSettingsQuery } from "../../redux/features/setting/settingApi"
 
 const TermsconditionPage = () => {
 
-
-  const { data: privacyPolicy, isLoading, refetch } = useGetAllSettingsQuery();
-
-  console.log(privacyPolicy?.termsAndConditions);
+  const status = 'terms';
+  const { data: privacyPolicy, isLoading, refetch } = useGetAllSettingsQuery(status);
 
   useEffect(() => {
     refetch();
@@ -46,7 +44,7 @@ const TermsconditionPage = () => {
         :
         (
           <div className="w-full h-full ml-3">
-            <div dangerouslySetInnerHTML={{ __html: privacyPolicy?.termsAndConditions }} />
+            <div dangerouslySetInnerHTML={{ __html: privacyPolicy?.data?.description }} />
           </div>
         )
       }

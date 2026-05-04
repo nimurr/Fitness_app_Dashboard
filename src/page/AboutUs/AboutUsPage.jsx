@@ -7,11 +7,9 @@ import { useGetAllSettingsQuery } from "../../redux/features/setting/settingApi"
 import { useEffect } from "react";
 
 const AboutUsPage = () => {
+  const status = 'about';
+  const { data: privacyPolicy, isLoading, refetch } = useGetAllSettingsQuery(status);
 
-
-  const { data: privacyPolicy, isLoading, refetch } = useGetAllSettingsQuery();
-
-  console.log(privacyPolicy?.termsAndConditions);
 
   useEffect(() => {
     refetch();
@@ -45,7 +43,7 @@ const AboutUsPage = () => {
           <Spin size="large" />
         </div>
       ) : (
-        <div dangerouslySetInnerHTML={{ __html: privacyPolicy?.aboutUs }} />
+        <div dangerouslySetInnerHTML={{ __html: privacyPolicy?.data?.description }} />
       )}
 
 

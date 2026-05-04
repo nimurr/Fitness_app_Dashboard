@@ -7,10 +7,9 @@ import { useGetAllSettingsQuery } from "../../redux/features/setting/settingApi"
 import { useEffect } from "react";
 
 const PrivacyPolicyPage = () => {
-
-  const { data: privacyPolicy, isLoading, refetch } = useGetAllSettingsQuery();
-
-  console.log(privacyPolicy);
+  const status = 'privacy';
+  const { data: privacyPolicy, isLoading, refetch } = useGetAllSettingsQuery(status);
+  console.log(privacyPolicy?.data?.description);
 
   useEffect(() => {
     refetch();
@@ -42,7 +41,7 @@ const PrivacyPolicyPage = () => {
         </div>
       ) : (
         <div className="w-full h-full ml-3 ">
-          <div dangerouslySetInnerHTML={{ __html: privacyPolicy?.privacyPolicy }} />
+          <div dangerouslySetInnerHTML={{ __html: privacyPolicy?.data?.description }} />
 
         </div>
       )}
