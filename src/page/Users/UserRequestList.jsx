@@ -122,7 +122,7 @@ const UserRequestList = () => {
   const totalPages = Math.ceil(filtered?.length / PAGE_SIZE);
   const paginated = filtered?.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
 
-  const cols = ["#SI", "First Name", "Last Name", "ROLE", "Email", "Phone", "Joined Date", "Action"];
+  const cols = ["#SI", "Full Name", "ROLE", "Email", "Phone", "Joined Date", "Action"];
 
   return (
     <div className="bg-[#111111] min-h-screen p-7 text-[#f0f0f2]">
@@ -183,16 +183,12 @@ const UserRequestList = () => {
               {(currentPage - 1) * PAGE_SIZE + ri + 1}
             </div>
             {/* Account ID */}
-           
+
             {/* First Name */}
             <div className="flex-1 px-4 py-4 text-xs border-r border-[#252527] flex items-center gap-2.5">
-              <img src={user.image?.url} alt={user.firstName}
+              <img src={user.image?.url} alt={user.name}
                 className="w-7 h-7 rounded-lg object-cover shrink-0" />
-              {user.firstName}
-            </div>
-            {/* Last Name */}
-            <div className="flex-1 px-4 py-4 text-xs border-r border-[#252527]">
-              {user.lastName}
+              {user?.name || "- -"}
             </div>
             {/* Gender */}
             <div className="flex-1 px-4 py-4 text-xs text-[#ccc] border-r border-[#252527]">
