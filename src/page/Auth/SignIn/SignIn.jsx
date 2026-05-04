@@ -15,8 +15,10 @@ const SignIn = () => {
 
   const handleSubmit = async (values) => {
     const { email, password } = values;
+    const data = { email, password };
     try {
-      const res = await login({ email, password }).unwrap();
+      const res = await login(data).unwrap();
+      console.log(res)
       if (res.error) {
         toast.error(res.error.data.message);
       }
@@ -24,7 +26,7 @@ const SignIn = () => {
         dispatch(loggedUser({ token: res?.token }));
         toast.success(res?.message);
       }
-      navigate("/");
+      // navigate("/");
     } catch (error) {
       toast.error("Something went wrong");
     }
