@@ -21,21 +21,7 @@ const settingApi = baseApi.injectEndpoints({
     }),
 
 
-    addFaqMain: builder.mutation({  // ✅ FIXED: Use mutation instead of query
-      query: (data) => ({
-        url: "/general-info/add-new-faq",
-        method: "POST",
-        body: data,
-      }),
-    }),
-    deleteFaq: builder.mutation({  // ✅ FIXED: Use mutation instead of query
-      query: (data) => ({
-        url: `/general-info/delete-faq`,
-        method: "POST",
-        body: data,
-      }),
-      invalidatesTags: ["Setting"],
-    }),
+
 
     updateTramsAndConditionsAll: builder.mutation({  // ✅ FIXED: Use mutation instead of query
       query: (data) => ({
@@ -81,7 +67,27 @@ const settingApi = baseApi.injectEndpoints({
       }),
     }),
 
-
+    getAllFaq: builder.query({
+      query: () => ({
+        url: "/faq/all-faqs",
+        method: "GET",
+      }),
+    }),
+    addFaqMain: builder.mutation({  // ✅ FIXED: Use mutation instead of query
+      query: (data) => ({
+        url: "/faq/add-faq",
+        method: "POST",
+        body: data,
+      }),
+    }),
+    deleteFaq: builder.mutation({  // ✅ FIXED: Use mutation instead of query
+      query: (data) => ({
+        url: `/general-info/delete-faq`,
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["Setting"],
+    }),
 
 
   }),
@@ -92,12 +98,15 @@ export const {
   useUpdatePrivacyPolicyAllMutation, // ✅ FIXED: Mutation hook 
   useUpdateTramsAndConditionsAllMutation,
 
-  useAddFaqMainMutation,
-  useDeleteFaqMutation,
 
   useUpdateAboutUsMutation,
   useGetUserProfileQuery,
   useUpdateProfileMutation,
 
-  useGetAllNotificationQuery
+  useGetAllNotificationQuery,
+
+  useGetAllFaqQuery,
+  useAddFaqMainMutation,
+  useDeleteFaqMutation,
+
 } = settingApi;

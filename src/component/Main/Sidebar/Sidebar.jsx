@@ -71,6 +71,8 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
 
   const handleLogout = () => {
     dispatch(logoutUser());
+    localStorage.removeItem("token")
+    localStorage.removeItem("user")
     navigate("/auth");
   };
 

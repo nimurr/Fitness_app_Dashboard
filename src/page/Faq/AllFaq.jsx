@@ -3,13 +3,17 @@ import { MdOutlineKeyboardArrowLeft } from 'react-icons/md';
 import { Link } from 'react-router-dom';
 import { Modal, Button, Input, Form, notification } from 'antd';
 import { FaPlus } from 'react-icons/fa';
-import { useAddFaqMainMutation, useDeleteFaqMutation, useGetAllSettingsQuery } from '../../redux/features/setting/settingApi';
+import { useAddFaqMainMutation, useDeleteFaqMutation, useGetAllFaqQuery, useGetAllSettingsQuery } from '../../redux/features/setting/settingApi';
 
 const AllFaq = () => {
 
-    const { data: allFaq, refetch } = useGetAllSettingsQuery();
+    const { data: allFaq, refetch } = useGetAllFaqQuery();
+
+
     const [faqsDelete] = useDeleteFaqMutation();
     const [addFaq] = useAddFaqMainMutation();
+
+    console.log(allFaq)
 
 
     useEffect(() => {
