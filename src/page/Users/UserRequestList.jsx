@@ -5,46 +5,7 @@ import { GoInfo } from "react-icons/go";
 import { FiUser, FiMail, FiPhone, FiMapPin, FiCalendar, FiHash } from "react-icons/fi";
 import { useGetAllUsersForAdminQuery } from "../../redux/features/user/userApi";
 
-const allUsers = [
-  {
-    id: 1, accountID: 2010, firstName: "John", lastName: "Doe", gender: "Male",
-    email: "johndoe@example.com", address_line1: "123 Main St, Springfield",
-    image: { url: "https://randomuser.me/api/portraits/men/1.jpg" },
-    phone: "123-456-7890", createdAt: "2024-01-01T10:00:00", status: "Only Registered",
-  },
-  {
-    id: 2, accountID: 2011, firstName: "Jane", lastName: "Smith", gender: "Female",
-    email: "janesmith@example.com", address_line1: "456 Oak Ave, Springfield",
-    image: { url: "https://randomuser.me/api/portraits/women/1.jpg" },
-    phone: "234-567-8901", createdAt: "2024-02-01T11:00:00", status: "Subscribers",
-  },
-  {
-    id: 3, accountID: 2012, firstName: "Alex", lastName: "Johnson", gender: "Male",
-    email: "alexj@example.com", address_line1: "789 Pine Rd, Shelbyville",
-    image: { url: "https://randomuser.me/api/portraits/men/2.jpg" },
-    phone: "345-678-9012", createdAt: "2024-03-15T09:00:00", status: "Subscribers",
-  },
-  {
-    id: 4, accountID: 2013, firstName: "Sara", lastName: "Williams", gender: "Female",
-    email: "saraw@example.com", address_line1: "321 Elm St, Capital City",
-    image: { url: "https://randomuser.me/api/portraits/women/2.jpg" },
-    phone: "456-789-0123", createdAt: "2024-04-10T14:00:00", status: "Only Registered",
-  },
-  {
-    id: 5, accountID: 2014, firstName: "Mike", lastName: "Brown", gender: "Male",
-    email: "mikeb@example.com", address_line1: "654 Maple Dr, Ogdenville",
-    image: { url: "https://randomuser.me/api/portraits/men/3.jpg" },
-    phone: "567-890-1234", createdAt: "2024-05-20T16:00:00", status: "Subscribers",
-  },
-  {
-    id: 6, accountID: 2015, firstName: "Emily", lastName: "Davis", gender: "Female",
-    email: "emilyd@example.com", address_line1: "987 Cedar Ln, North Haverbrook",
-    image: { url: "https://randomuser.me/api/portraits/women/3.jpg" },
-    phone: "678-901-2345", createdAt: "2024-06-05T08:00:00", status: "Only Registered",
-  },
-];
-
-const PAGE_SIZE = 5;
+const PAGE_SIZE = 10;
 
 const formatDate = (iso) =>
   new Date(iso).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" });
@@ -98,13 +59,12 @@ const UserModal = ({ user, onClose }) => {
             <div className="flex items-center gap-2 mt-1.5">
               <StatusBadge status={user.status} />
               <span className="text-[#555] text-xs">·</span>
-              <span className="text-[#666] text-xs">{user.gender}</span>
+              <span className="text-[#666] text-xs">{user.role}</span>
             </div>
           </div>
 
           <div className="grid grid-cols-1 gap-3">
-            {[
-              { icon: FiHash, label: "Account ID", value: `#${user.accountID}` },
+            {[,
               { icon: FiMail, label: "Email", value: user.email },
               { icon: FiPhone, label: "Phone", value: user.phone },
               { icon: FiMapPin, label: "Address", value: user.address_line1 },
@@ -159,10 +119,10 @@ const UserRequestList = () => {
     return matchName && matchDate;
   });
 
-  const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
-  const paginated = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
+  const totalPages = Math.ceil(filtered?.length / PAGE_SIZE);
+  const paginated = filtered?.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
 
-  const cols = ["#SI", "Account ID", "First Name", "Last Name", "Gender", "Email", "Phone", "Joined Date", "Action"];
+  const cols = ["#SI", "First Name", "Last Name", "ROLE", "Email", "Phone", "Joined Date", "Action"];
 
   return (
     <div className="bg-[#111111] min-h-screen p-7 text-[#f0f0f2]">
@@ -204,28 +164,26 @@ const UserRequestList = () => {
           {cols.map((col, i) => (
             <div key={col}
               className={`flex-1 px-4 py-4 text-xs font-medium text-[#f0f0f2] tracking-wide
-                ${i < cols.length - 1 ? "border-r border-[#2a2a2c]" : ""}`}>
+                ${i < cols?.length - 1 ? "border-r border-[#2a2a2c]" : ""}`}>
               {col}
             </div>
           ))}
         </div>
 
         {/* Rows */}
-        {paginated.length === 0 ? (
+        {paginated?.length === 0 ? (
           <div className="py-16 text-center text-[#444] text-sm">No users found.</div>
-        ) : paginated.map((user, ri) => (
+        ) : paginated?.map((user, ri) => (
           <div key={user.id}
             className={`flex items-center hover:bg-[#222224] transition-colors duration-150
-              ${ri < paginated.length - 1 ? "border-b border-[#252527]" : ""}`}>
+              ${ri < paginated?.length - 1 ? "border-b border-[#252527]" : ""}`}>
 
             {/* SI */}
             <div className="flex-1 px-4 py-4 text-xs text-[#aaa] border-r border-[#252527]">
               {(currentPage - 1) * PAGE_SIZE + ri + 1}
             </div>
             {/* Account ID */}
-            <div className="flex-1 px-4 py-4 text-xs border-r border-[#252527]">
-              {user.accountID}
-            </div>
+           
             {/* First Name */}
             <div className="flex-1 px-4 py-4 text-xs border-r border-[#252527] flex items-center gap-2.5">
               <img src={user.image?.url} alt={user.firstName}
@@ -238,7 +196,7 @@ const UserRequestList = () => {
             </div>
             {/* Gender */}
             <div className="flex-1 px-4 py-4 text-xs text-[#ccc] border-r border-[#252527]">
-              {user.gender}
+              {user.role}
             </div>
             {/* Email */}
             <div className="flex-1 px-4 py-4 text-xs text-[#ccc] border-r border-[#252527] truncate max-w-[140px]">
@@ -269,7 +227,7 @@ const UserRequestList = () => {
       {/* Footer */}
       <div className="flex items-center justify-between mt-5 px-1">
         <span className="text-xs text-[#666]">
-          Showing {paginated.length} of {filtered.length} users
+          Showing {paginated?.length} of {filtered?.length} users
         </span>
 
         <div className="flex items-center gap-2">
