@@ -976,94 +976,96 @@ const MealPlan = () => {
         </div>
       </div>
 
-      {/* Table */}
-      <div className="bg-[#1c1c1e] border border-[#2a2a2c] rounded-2xl overflow-hidden">
-        <div className="flex items-center border-b-2 border-red-700">
-          {cols.map((col, i) => (
-            <div key={col}
-              className={`flex-1 px-4 py-4 text-xs font-medium text-[#f0f0f2] tracking-wide
+      <div className="w-full overflow-x-auto">
+        {/* Table */}
+        <div className="bg-[#1c1c1e] border border-[#2a2a2c] rounded-2xl w-full">
+
+          <div className="flex items-center border-b-2 border-red-700">
+            {cols.map((col, i) => (
+              <div key={col}
+                className={`flex-1 px-4 py-4 text-xs font-medium text-[#f0f0f2] tracking-wide
                 ${i < cols.length - 1 ? 'border-r border-[#2a2a2c]' : ''}`}>
-              {col}
-            </div>
-          ))}
-        </div>
+                {col}
+              </div>
+            ))}
+          </div>
 
-        {isLoading && (
-          <div className="py-16 text-center text-[#444] text-sm">Loading plans…</div>
-        )}
-        {!isLoading && paginated.length === 0 && (
-          <div className="py-16 text-center text-[#444] text-sm">No plans found.</div>
-        )}
+          {isLoading && (
+            <div className="py-16 text-center text-[#444] text-sm">Loading plans…</div>
+          )}
+          {!isLoading && paginated.length === 0 && (
+            <div className="py-16 text-center text-[#444] text-sm">No plans found.</div>
+          )}
 
-        {!isLoading && paginated.map((plan, ri) => {
-          const planName = getLocalized(plan.name);
-          const monthlyPrice = plan.pricing?.monthly?.amount ?? plan.pricing?.monthly?.price;
-          const yearlyCurrency = plan.pricing?.monthly?.currency ?? 'USD';
+          {!isLoading && paginated.map((plan, ri) => {
+            const planName = getLocalized(plan.name);
+            const monthlyPrice = plan.pricing?.monthly?.amount ?? plan.pricing?.monthly?.price;
+            const yearlyCurrency = plan.pricing?.monthly?.currency ?? 'USD';
 
-          return (
-            <div key={plan._id}
-              className={`flex items-center hover:bg-[#222224] transition-colors duration-150
+            return (
+              <div key={plan._id}
+                className={`flex items-center hover:bg-[#222224] transition-colors duration-150
                 ${ri < paginated.length - 1 ? 'border-b border-[#252527]' : ''}`}>
 
-              <div className="flex-1 px-4 py-4 text-sm text-[#555] border-r border-[#252527]">
-                {(currentPage - 1) * PAGE_SIZE + ri + 1}
-              </div>
+                <div className="flex-1 px-4 py-4 text-sm text-[#555] border-r border-[#252527]">
+                  {(currentPage - 1) * PAGE_SIZE + ri + 1}
+                </div>
 
-              <div className="flex-1 px-4 py-4 border-r border-[#252527]">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-lg bg-red-700/20 flex items-center justify-center shrink-0">
-                    <FiStar size={13} className="text-red-400" />
-                  </div>
-                  <div className="min-w-0">
-                    <p className="text-sm text-[#f0f0f2] font-medium truncate">{planName}</p>
-                    <p className="text-[10px] text-[#555] truncate">{plan.slug}</p>
+                <div className="flex-1 px-4 py-4 border-r border-[#252527]">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-8 h-8 rounded-lg bg-red-700/20 flex items-center justify-center shrink-0">
+                      <FiStar size={13} className="text-red-400" />
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-sm text-[#f0f0f2] font-medium truncate">{planName}</p>
+                      <p className="text-[10px] text-[#555] truncate">{plan.slug}</p>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <div className="flex-1 px-4 py-4 border-r border-[#252527]">
-                <StatusBadge active={plan.isActive} />
-              </div>
+                <div className="flex-1 px-4 py-4 border-r border-[#252527]">
+                  <StatusBadge active={plan.isActive} />
+                </div>
 
-              <div className="flex-1 px-4 py-4 border-r border-[#252527]">
-                {plan.isPopular
-                  ? <Tag label="Popular" color="amber" />
-                  : <span className="text-[#444] text-[10px]">—</span>
-                }
-              </div>
+                <div className="flex-1 px-4 py-4 border-r border-[#252527]">
+                  {plan.isPopular
+                    ? <Tag label="Popular" color="amber" />
+                    : <span className="text-[#444] text-[10px]">—</span>
+                  }
+                </div>
 
-              <div className="flex-1 px-4 py-4 text-sm text-[#ccc] border-r border-[#252527]">
-                {plan.limits?.mealsPerMonth ?? '—'}
-              </div>
+                <div className="flex-1 px-4 py-4 text-sm text-[#ccc] border-r border-[#252527]">
+                  {plan.limits?.mealsPerMonth ?? '—'}
+                </div>
 
-              <div className="flex-1 px-4 py-4 text-sm text-[#ccc] border-r border-[#252527]">
-                {plan.limits?.mealsPerWeek ?? '—'}
-              </div>
+                <div className="flex-1 px-4 py-4 text-sm text-[#ccc] border-r border-[#252527]">
+                  {plan.limits?.mealsPerWeek ?? '—'}
+                </div>
 
-              <div className="flex-1 px-4 py-4 border-r border-[#252527]">
-                {monthlyPrice != null ? (
-                  <div>
-                    <p className="text-sm text-[#f0f0f2] font-medium">{yearlyCurrency} {monthlyPrice}</p>
-                    <p className="text-[10px] text-[#555]">/ month</p>
-                  </div>
-                ) : <span className="text-[#444] text-[10px]">—</span>}
-              </div>
+                <div className="flex-1 px-4 py-4 border-r border-[#252527]">
+                  {monthlyPrice != null ? (
+                    <div>
+                      <p className="text-sm text-[#f0f0f2] font-medium">{yearlyCurrency} {monthlyPrice}</p>
+                      <p className="text-[10px] text-[#555]">/ month</p>
+                    </div>
+                  ) : <span className="text-[#444] text-[10px]">—</span>}
+                </div>
 
-              <div className="flex-1 px-4 py-4 flex justify-center">
-                <button
-                  onClick={() => setSelectedPlan(plan)}
-                  className="px-3 py-1.5 rounded-lg bg-red-700/20 border border-red-700/30
+                <div className="flex-1 px-4 py-4 flex justify-center">
+                  <button
+                    onClick={() => setSelectedPlan(plan)}
+                    className="px-3 py-1.5 rounded-lg bg-red-700/20 border border-red-700/30
                     text-red-400 text-[10px] font-semibold hover:bg-red-700 hover:text-white
                     transition-all duration-200"
-                >
-                  View Details
-                </button>
+                  >
+                    View Details
+                  </button>
+                </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
-
       {/* Footer */}
       <div className="flex items-center justify-between mt-5 px-1">
         <span className="text-sm text-[#666]">

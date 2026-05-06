@@ -125,7 +125,7 @@ const UserRequestList = () => {
   const cols = ["#SI", "Full Name", "ROLE", "Email", "Phone", "Joined Date", "Action"];
 
   return (
-    <div className="bg-[#111111] min-h-screen p-7 text-[#f0f0f2]">
+    <div className="bg-[#111111] min-h-screen p-7 text-[#f0f0f2] w-full ">
 
       {/* Top bar */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
@@ -157,67 +157,69 @@ const UserRequestList = () => {
       </div>
 
       {/* Table */}
-      <div className="bg-[#1c1c1e] border border-[#2a2a2c] rounded-2xl overflow-hidden">
+      <div className="w-full overflow-x-auto">
+        <div className="bg-[#1c1c1e] border border-[#2a2a2c] rounded-2xl overflow-hidden w-full min-w-[1000px] ">
 
-        {/* Header */}
-        <div className="flex items-center border-b-2 border-red-700">
-          {cols.map((col, i) => (
-            <div key={i}
-              className={`flex-1 px-4 py-4 text-xs font-medium text-[#f0f0f2] tracking-wide
+          {/* Header */}
+          <div className="flex items-center border-b-2 border-red-700">
+            {cols.map((col, i) => (
+              <div key={i}
+                className={`flex-1 px-4 py-4 text-xs font-medium text-[#f0f0f2] tracking-wide
                 ${i < cols?.length - 1 ? "border-r border-[#2a2a2c]" : ""}`}>
-              {col}
+                {col}
+              </div>
+            ))}
+          </div>
+
+          {/* Rows */}
+          {paginated?.length === 0 ? (
+            <div className="py-16 text-center text-[#444] text-sm">No users found.</div>
+          ) : paginated?.map((user, ri) => (
+            <div key={ri}
+              className={`flex items-center hover:bg-[#222224] transition-colors duration-150
+              ${ri < paginated?.length - 1 ? "border-b border-[#252527]" : ""}`}>
+
+              {/* SI */}
+              <div className="flex-1 px-4 py-4 text-xs text-[#aaa] border-r border-[#252527]">
+                {(currentPage - 1) * PAGE_SIZE + ri + 1}
+              </div>
+              {/* Account ID */}
+
+              {/* First Name */}
+              <div className="flex-1 px-4 py-4 text-xs border-r border-[#252527] flex items-center gap-2.5">
+                <img src={user.image?.url} alt={user.name}
+                  className="w-7 h-7 rounded-lg object-cover shrink-0" />
+                {user?.name || "- -"}
+              </div>
+              {/* Gender */}
+              <div className="flex-1 px-4 py-4 text-xs text-[#ccc] border-r border-[#252527]">
+                {user.role}
+              </div>
+              {/* Email */}
+              <div className="flex-1 px-4 py-4 text-xs text-[#ccc] border-r border-[#252527] truncate max-w-[140px]">
+                {user.email}
+              </div>
+              {/* Phone */}
+              <div className="flex-1 px-4 py-4 text-xs text-[#ccc] border-r border-[#252527]">
+                {user.phone}
+              </div>
+              {/* Joined Date */}
+              <div className="flex-1 px-4 py-4 text-xs text-[#ccc] border-r border-[#252527]">
+                {formatDate(user.createdAt)}
+              </div>
+              {/* Action */}
+              <div className="flex-1 px-4 py-4 flex justify-center">
+                <button
+                  onClick={() => setSelectedUser(user)}
+                  className="w-8 h-8 rounded-lg bg-[#2a2a2c] hover:bg-red-700/30 flex items-center
+                  justify-center transition-colors duration-200 group"
+                >
+                  <GoInfo className="text-lg text-[#aaa] group-hover:text-red-400 transition-colors" />
+                </button>
+              </div>
             </div>
           ))}
         </div>
-
-        {/* Rows */}
-        {paginated?.length === 0 ? (
-          <div className="py-16 text-center text-[#444] text-sm">No users found.</div>
-        ) : paginated?.map((user, ri) => (
-          <div key={ri}
-            className={`flex items-center hover:bg-[#222224] transition-colors duration-150
-              ${ri < paginated?.length - 1 ? "border-b border-[#252527]" : ""}`}>
-
-            {/* SI */}
-            <div className="flex-1 px-4 py-4 text-xs text-[#aaa] border-r border-[#252527]">
-              {(currentPage - 1) * PAGE_SIZE + ri + 1}
-            </div>
-            {/* Account ID */}
-
-            {/* First Name */}
-            <div className="flex-1 px-4 py-4 text-xs border-r border-[#252527] flex items-center gap-2.5">
-              <img src={user.image?.url} alt={user.name}
-                className="w-7 h-7 rounded-lg object-cover shrink-0" />
-              {user?.name || "- -"}
-            </div>
-            {/* Gender */}
-            <div className="flex-1 px-4 py-4 text-xs text-[#ccc] border-r border-[#252527]">
-              {user.role}
-            </div>
-            {/* Email */}
-            <div className="flex-1 px-4 py-4 text-xs text-[#ccc] border-r border-[#252527] truncate max-w-[140px]">
-              {user.email}
-            </div>
-            {/* Phone */}
-            <div className="flex-1 px-4 py-4 text-xs text-[#ccc] border-r border-[#252527]">
-              {user.phone}
-            </div>
-            {/* Joined Date */}
-            <div className="flex-1 px-4 py-4 text-xs text-[#ccc] border-r border-[#252527]">
-              {formatDate(user.createdAt)}
-            </div>
-            {/* Action */}
-            <div className="flex-1 px-4 py-4 flex justify-center">
-              <button
-                onClick={() => setSelectedUser(user)}
-                className="w-8 h-8 rounded-lg bg-[#2a2a2c] hover:bg-red-700/30 flex items-center
-                  justify-center transition-colors duration-200 group"
-              >
-                <GoInfo className="text-lg text-[#aaa] group-hover:text-red-400 transition-colors" />
-              </button>
-            </div>
-          </div>
-        ))}
       </div>
 
       {/* Footer */}
