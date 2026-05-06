@@ -162,7 +162,7 @@ const UserRequestList = () => {
         {/* Header */}
         <div className="flex items-center border-b-2 border-red-700">
           {cols.map((col, i) => (
-            <div key={col}
+            <div key={i}
               className={`flex-1 px-4 py-4 text-xs font-medium text-[#f0f0f2] tracking-wide
                 ${i < cols?.length - 1 ? "border-r border-[#2a2a2c]" : ""}`}>
               {col}
@@ -174,7 +174,7 @@ const UserRequestList = () => {
         {paginated?.length === 0 ? (
           <div className="py-16 text-center text-[#444] text-sm">No users found.</div>
         ) : paginated?.map((user, ri) => (
-          <div key={user.id}
+          <div key={ri}
             className={`flex items-center hover:bg-[#222224] transition-colors duration-150
               ${ri < paginated?.length - 1 ? "border-b border-[#252527]" : ""}`}>
 
