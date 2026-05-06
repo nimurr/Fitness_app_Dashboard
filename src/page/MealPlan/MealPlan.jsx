@@ -976,9 +976,9 @@ const MealPlan = () => {
         </div>
       </div>
 
-      <div className="w-full overflow-x-auto">
+      <div className="w-full overflow-x-auto ">
         {/* Table */}
-        <div className="bg-[#1c1c1e] border border-[#2a2a2c] rounded-2xl w-full">
+        <div className="bg-[#1c1c1e] border border-[#2a2a2c] rounded-2xl min-w-[1000px]">
 
           <div className="flex items-center border-b-2 border-red-700">
             {cols.map((col, i) => (
