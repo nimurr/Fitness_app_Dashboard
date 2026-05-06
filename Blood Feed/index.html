@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BloodFIT – Stop Guessing Your Diet</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap"
+        rel="stylesheet" />
+    <style>
+        :root {
+            --red: #e0141e;
+            --red-dark: #b30f17;
+            --bg: #0d0d0d;
+            --surface: #161616;
+            --surface2: #1e1e1e;
+            --text: #f0f0f0;
+            --muted: #8a8a8a;
+            --border: #2a2a2a;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Montserrat', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* ── Scrollbar ── */
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--red);
+            border-radius: 3px;
+        }
+
+        /* ── Noise Texture overlay ── */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.035'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.6;
+        }
+
+        /* ── Nav ── */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(10, 10, 10, 0.92);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .logo {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.7rem;
+            letter-spacing: 2px;
+        }
+
+        .logo span {
+            color: var(--red);
+        }
+
+        nav a {
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #ccc;
+            transition: color 0.2s;
+        }
+
+        nav a:hover {
+            color: var(--red);
+        }
+
+        /* ── Hero ── */
+        .hero {
+            background: var(--red);
+            position: relative;
+            overflow: hidden;
+            min-height: 90vh;
+            display: flex;
+            align-items: center;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at 70% 50%, rgba(255, 255, 255, 0.06) 0%, transparent 70%);
+        }
+
+        /* food icon ring decorations */
+        .food-icon {
+            position: absolute;
+            opacity: 0.15;
+            font-size: 2rem;
+        }
+
+        .hero-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(2.2rem, 5vw, 4rem);
+            letter-spacing: 0.03em;
+            line-height: 1.05;
+        }
+
+        .btn-store {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #111;
+            color: #fff;
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            transition: background 0.2s, transform 0.15s;
+        }
+
+        .btn-store:hover {
+            background: #222;
+            transform: translateY(-1px);
+        }
+
+        /* Phone mockup */
+        .phone-mockup {
+            background: #111;
+            border-radius: 36px;
+            border: 2px solid #333;
+            overflow: hidden;
+            width: 200px;
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.05);
+            position: relative;
+        }
+
+        .phone-notch {
+            width: 60px;
+            height: 16px;
+            background: #111;
+            border-radius: 0 0 12px 12px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .phone-screen {
+            background: #1a1a1a;
+            min-height: 340px;
+            padding: 0.5rem;
+        }
+
+        /* ── Section headings ── */
+        .section-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(1.8rem, 4vw, 3rem);
+            letter-spacing: 0.04em;
+            line-height: 1.1;
+        }
+
+        .accent {
+            color: var(--red);
+        }
+
+        .section-sub {
+            color: var(--muted);
+            font-size: 0.85rem;
+            font-weight: 500;
+            letter-spacing: 0.04em;
+            margin-top: 0.5rem;
+        }
+
+        /* ── Image placeholder ── */
+        .img-placeholder {
+            background: var(--surface2);
+            border: 2px dashed var(--border);
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--muted);
+            font-size: 0.78rem;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            gap: 0.5rem;
+            min-height: 240px;
+        }
+
+        .img-placeholder svg {
+            opacity: 0.4;
+        }
+
+        /* ── How we work timeline ── */
+        .step-line {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--red) 20%, var(--red) 80%, transparent);
+            transform: translateY(-50%);
+        }
+
+        .step-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--red);
+            box-shadow: 0 0 12px var(--red);
+        }
+
+        /* ── Cards ── */
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            transition: border-color 0.25s, transform 0.2s;
+        }
+
+        .card:hover {
+            border-color: var(--red);
+            transform: translateY(-3px);
+        }
+
+        /* ── Pricing ── */
+        .plan-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 2rem 1.5rem;
+            transition: transform 0.2s, border-color 0.25s;
+            position: relative;
+        }
+
+        .plan-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .plan-featured {
+            border-color: var(--red);
+            background: var(--surface2);
+        }
+
+        .plan-price {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2.5rem;
+            color: var(--text);
+        }
+
+        .btn-primary {
+            background: var(--red);
+            color: #fff;
+            padding: 0.75rem 2rem;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.8rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            border: none;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.15s;
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            background: var(--red-dark);
+            transform: translateY(-1px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--text);
+            padding: 0.75rem 2rem;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.8rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: border-color 0.2s, transform 0.15s;
+            width: 100%;
+        }
+
+        .btn-outline:hover {
+            border-color: var(--red);
+            transform: translateY(-1px);
+        }
+
+        .check-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+            font-size: 0.78rem;
+            color: #ccc;
+            margin-bottom: 0.5rem;
+        }
+
+        .check-icon {
+            color: var(--red);
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+
+        /* ── Toggle ── */
+        .toggle-btn {
+            padding: 0.5rem 1.5rem;
+            border-radius: 6px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .toggle-active {
+            background: var(--red);
+            color: #fff;
+        }
+
+        .toggle-inactive {
+            background: transparent;
+            color: var(--muted);
+        }
+
+        /* ── Contact ── */
+        .input-field {
+            width: 100%;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            font-size: 0.82rem;
+            font-family: 'Montserrat', sans-serif;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .input-field:focus {
+            border-color: var(--red);
+        }
+
+        .input-field::placeholder {
+            color: var(--muted);
+        }
+
+        /* ── Footer ── */
+        footer {
+            background: #0a0a0a;
+            border-top: 1px solid var(--border);
+        }
+
+        /* ── Divider ── */
+        .red-divider {
+            width: 48px;
+            height: 3px;
+            background: var(--red);
+            border-radius: 2px;
+            margin: 0.75rem auto 0;
+        }
+
+        /* Badge */
+        .badge {
+            position: absolute;
+            top: -12px;
+            right: 16px;
+            background: var(--red);
+            color: #fff;
+            font-size: 0.65rem;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            padding: 0.25rem 0.7rem;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+
+        /* Discount banner */
+        .discount-banner {
+            background: rgba(224, 20, 30, 0.12);
+            border: 1px solid rgba(224, 20, 30, 0.3);
+            border-radius: 8px;
+            padding: 0.6rem 1rem;
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: var(--red);
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        /* Fade-in animation */
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(24px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-up {
+            animation: fadeUp 0.7s ease both;
+        }
+
+        .delay-1 {
+            animation-delay: 0.15s;
+        }
+
+        .delay-2 {
+            animation-delay: 0.3s;
+        }
+
+        .delay-3 {
+            animation-delay: 0.45s;
+        }
+
+        /* DNA decoration */
+        .dna-bg {
+            position: absolute;
+            inset: 0;
+            background-image:
+                radial-gradient(circle at 15% 50%, rgba(224, 20, 30, 0.04) 0%, transparent 50%),
+                radial-gradient(circle at 85% 20%, rgba(224, 20, 30, 0.03) 0%, transparent 40%);
+            pointer-events: none;
+        }
+
+        /* section spacing */
+        section {
+            padding: 5rem 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        /* Why choose grid */
+        .why-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1px;
+            background: var(--border);
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .why-cell {
+            background: var(--surface);
+            padding: 2rem;
+            transition: background 0.2s;
+        }
+
+        .why-cell:hover {
+            background: var(--surface2);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .why-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-phone {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ═══════════════════════════════════════ NAV ═══════════════════════════════════════ -->
+    <nav>
+        <div class="container flex items-center justify-between" style="padding-top:0.9rem;padding-bottom:0.9rem;">
+            <div class="logo">BLOOD<span>FIT</span></div>
+            <div class="hidden md:flex items-center gap-7">
+                <a href="#hero">Home</a>
+                <a href="#services">Services</a>
+                <a href="/privacy.html">Privacy Policy </a>
+                <a href="/termandcondition.html">Terms And Condition</a>
+                <a href="/accountdeletion.html">Account Deletion</a>
+                <!-- <a href="#services">Services</a> -->
+                <!-- <a href="#how">How We Work</a>
+                <a href="#why">Why Us</a>
+                <a href="#pricing">Pricing</a> -->
+                <a href="#contact">Contact Us</a>
+            </div>
+            <!-- Mobile hamburger -->
+            <button onclick="document.getElementById('mob-menu').classList.toggle('hidden')"
+                class="md:hidden text-white">
+                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+            </button>
+        </div>
+        <div id="mob-menu" class="hidden md:hidden px-6 pb-4 flex flex-col gap-3">
+            <a href="#hero">Home</a><a href="#services">Services</a>
+            <a href="#how">How We Work</a><a href="#why">Why Us</a>
+            <a href="#pricing">Pricing</a><a href="#contact">Contact Us</a>
+        </div>
+    </nav>
+
+    <!-- ═══════════════════════════════════════ HERO ═══════════════════════════════════════ -->
+    <section id="hero" class="hero relative" style="padding-top:5rem;">
+        <!-- floating food icons -->
+        <span class="food-icon" style="top:8%;left:3%;">🫐</span>
+        <span class="food-icon" style="top:15%;left:12%;">🥩</span>
+        <span class="food-icon" style="top:70%;left:5%;">🥦</span>
+        <span class="food-icon" style="top:80%;left:15%;">🍳</span>
+        <span class="food-icon" style="top:10%;right:8%;">🥑</span>
+        <span class="food-icon" style="top:60%;right:4%;">🍇</span>
+        <span class="food-icon" style="bottom:10%;right:12%;">🥕</span>
+        <span class="food-icon" style="bottom:20%;left:8%;">🍎</span>
+
+        <div class="flex justify-center py-20 w-full">
+            <!-- Text side -->
+            <div class="  md:text-left  text-center">
+                <h1 class="hero-title text-white mb-6 text-center">
+                    Stop Guessing Your Diet.Start Eating ForYour Blood Type
+                </h1>
+                <div class="flex flex-wrap gap-3 justify-center ">
+                    <a href="#" class="btn-store">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
+                            <path d="M3 20.5v-17c0-.83 1-.83 1.5-.5l15 8.5-15 8.5c-.5.33-1.5.33-1.5-.5z" />
+                        </svg>
+                        <span>Google Play</span>
+                    </a>
+                    <a href="#" class="btn-store">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
+                            <path
+                                d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z" />
+                        </svg>
+                        <span>App Store</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="absolute bottom-0 left-0 right-0">
+            <img src="Image/iPhone-13.png" alt="" class="w-72 mx-auto">
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════ BLUEPRINT ═══════════════════════════════════════ -->
+    <section style="background-image: url('Image/Component78.png');"
+        class="bg-cover bg-center bg-no-repeat min-h-[70vh] flex items-center">
+        <div class="container text-center">
+            <h2 class="section-title fade-up">Your Body Already Has A Blueprint,<br>BloodFIT Helps You Follow It</h2>
+            <p class="section-sub fade-up delay-1">Personalized Nutrition & Workouts Built Around Your Blood Type</p>
+            <div class="red-divider"></div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════ BIOLOGY SECTION ═══════════════════════════════════════ -->
+    <section id="services" style="padding:4rem 0;background:var(--bg);">
+        <div class="dna-bg"></div>
+        <div class="container">
+            <div class="flex flex-col md:flex-row items-center gap-12">
+                <!-- Text -->
+                <div class="flex-1">
+                    <h2 class="section-title mb-4">
+                        Fitness Designed Around <span class="accent">Your<br>Biology</span> – Not Trends.
+                    </h2>
+                    <p style="color:var(--muted);font-size:0.82rem;line-height:1.8;max-width:380px;">
+                        Personalized Meal And Workout Plans Designed Specifically For Your Blood Type
+                    </p>
+                </div>
+
+                <!-- Food image + card -->
+                <div class="flex-1 flex flex-col gap-4">
+                    <!-- Food image placeholder -->
+                    <div class=" border border-[#666]" style="height:260px;border-radius:20px;">
+                        <img class="w-full" src="Image/Frame2147227587.png" alt="">
+                        <span>Food Image</span>
+                        <span style="font-size:0.65rem;color:#555;">Replace with your image</span>
+                    </div>
+
+                    <!-- Info card -->
+                    <div class="card">
+                        <h3 style="font-size:0.9rem;font-weight:800;margin-bottom:0.75rem;">Meals Designed For Your
+                            Blood Type</h3>
+                        <p style="font-size:0.78rem;color:var(--muted);line-height:1.8;">
+                            AI-Tailored Meal Plans. You'll Receive Daily Meals Specifically Designed To Optimize Your
+                            Health, Boost Your Energy Levels, And Enhance Overall Well-Being Based On Your Unique Blood
+                            Type. These Meals Are Carefully Selected To Align With Your Body's Needs, Ensuring You Get
+                            The Best Nutrition Possible For Your Body The Right Way And Feel The Difference In Your
+                            Energy, Mood, And Overall Health.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════ HOW WE WORK ═══════════════════════════════════════ -->
+    <section id="how" style="padding:5rem 0;background:#0a0a0a;">
+        <div class="container">
+            <h2 class="section-title text-center mb-2">Step-By-Step Guide On <span class="accent">How We</span> <span
+                    class="accent">Work</span></h2>
+            <div class="red-divider mb-16"></div>
+
+            <!-- Timeline -->
+            <div class="relative" style="padding:3rem 0;">
+
+                <div class="  relative z-10">
+
+                    <img class="w-full" src="Image/Component60.png" alt="">
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════ WHY CHOOSE US ═══════════════════════════════════════ -->
+    <section id="why" style="padding:5rem 0;background:var(--bg);">
+        <div class="container">
+            <h2 class="section-title text-center mb-2">Why <span class="accent">Choose</span> Us</h2>
+            <div class="red-divider mb-12"></div>
+
+            <!-- Outer wrapper card -->
+            <div style="background:#1a1a1a;border-radius:24px;padding:1.5rem;">
+
+                <!-- Row 1 -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
+
+                    <!-- Cell 1 – Meals (with food image overflowing top-right) -->
+                    <div
+                        style="background:#111;border-radius:16px;padding:1.5rem;position:relative;overflow:hidden;min-height:200px;">
+                        <!-- Food image top right -->
+                        <div style="position:absolute;top:-10px;right:-10px;width:55%;height:120%;">
+                            <img src="Image/image10.png" alt="Food"
+                                style="width:100%;height:100%;object-fit:cover;border-radius:12px;">
+                        </div>
+                        <!-- Text bottom left -->
+                        <div style="position:relative;z-index:2;max-width:55%;">
+                            <h3 style="font-size:0.9rem;font-weight:800;margin-bottom:0.5rem;color:#fff;">Meals Built
+                                For Your Blood Type</h3>
+                            <p style="font-size:0.72rem;color:var(--muted);line-height:1.7;">Custom Meal Plans Based On
+                                Your Blood Type To Optimize Your Health And Energy.</p>
+                        </div>
+                    </div>
+
+                    <!-- Cell 2 – Scanner -->
+                    <div
+                        style="background:#111;border-radius:16px;padding:1.5rem;min-height:200px;display:flex;flex-direction:column;justify-content:center;">
+                        <!-- Icon -->
+                        <div
+                            style="width:56px;height:56px;background:rgba(180,20,20,0.8);border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:1.25rem;">
+                            <svg width="26" height="26" fill="none" stroke="#fff" stroke-width="1.8"
+                                viewBox="0 0 24 24">
+                                <rect x="2" y="7" width="20" height="10" rx="2" />
+                                <path d="M6 7V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v2" />
+                                <path d="M6 17v2a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-2" />
+                                <path d="M8 12h8" />
+                            </svg>
+                        </div>
+                        <h3 style="font-size:0.9rem;font-weight:800;margin-bottom:0.5rem;color:#fff;">BloodFIT Meal
+                            Scanner</h3>
+                        <p style="font-size:0.72rem;color:var(--muted);line-height:1.7;">Instantly Check If Your Food Is
+                            Compatible With Your Blood Type For Smarter Food Choices.</p>
+                    </div>
+
+                </div>
+
+                <!-- Row 2 -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+
+                    <!-- Cell 3 – Keep Track (with chart image) -->
+                    <div style="background:#111;border-radius:16px;padding:1.5rem;overflow:hidden;">
+                        <h3 style="font-size:0.9rem;font-weight:800;margin-bottom:0.5rem;color:#fff;">Keep Track Of Your
+                            Fitness Journey</h3>
+                        <!-- Chart wave image -->
+                        <div style="margin-top:1rem;">
+                            <img src="Image/Vector 1.png" alt="Chart" style="width:100%;opacity:0.9;">
+                        </div>
+                    </div>
+
+                    <!-- Cell 4 – Blood Type System (logo/icon grid) -->
+                    <div style="background:#111;border-radius:16px;padding:1.5rem;">
+                        <!-- 2x2 icon grid -->
+                        <div
+                            style="display:grid;grid-template-columns:1fr 1fr;gap:6px;width:60px;margin-bottom:1.25rem;">
+                            <div style="width:26px;height:26px;background:#fff;border-radius:4px;"></div>
+                            <div
+                                style="width:26px;height:26px;background:var(--red);border-radius:4px;transform:rotate(12deg);">
+                            </div>
+                            <div style="width:26px;height:26px;background:var(--red);border-radius:4px;"></div>
+                            <div style="width:26px;height:26px;background:#111;border-radius:4px;"></div>
+                        </div>
+                        <h3 style="font-size:0.9rem;font-weight:800;margin-bottom:0.5rem;color:#fff;">A Complete Blood
+                            Type System</h3>
+                        <p style="font-size:0.72rem;color:var(--muted);line-height:1.7;">A Comprehensive Platform
+                            Combining Personalized Meals, Workouts, And Tracking To Keep You On Track.</p>
+                    </div>
+
+                    <!-- Cell 5 – Workouts (dumbbell image) -->
+                    <div
+                        style="background:#111;border-radius:16px;padding:1.5rem;position:relative;overflow:hidden;min-height:200px;">
+                        <!-- Dumbbell image left side -->
+                        <div style="position:absolute;bottom:-10px;left:-10px;width:60%;">
+                            <img src="Image/image9.png" alt="Dumbbell" style="width:100%;object-fit:contain;">
+                        </div>
+                        <!-- Text right side -->
+                        <div style="position:relative;z-index:2;margin-left:auto;width:55%;text-align:right;">
+                            <h3 style="font-size:0.9rem;font-weight:800;margin-bottom:0.5rem;color:#fff;">Workouts
+                                Matched To Your Body & Goals</h3>
+                            <p style="font-size:0.72rem;color:var(--muted);line-height:1.7;">Tailored Workout Plans
+                                Designed To Align With Your Fitness Goals.</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- PRICING -->
+    <section id="pricing" style="padding:5rem 0;background:#0a0a0a;">
+        <div class="container">
+            <h2 class="section-title text-center mb-2">Subscription <span class="accent">Plans</span> <span
+                    style="color:var(--red);font-size:1.2rem;">✦</span></h2>
+            <div class="red-divider mb-8"></div>
+
+            <!-- Toggle -->
+            <div style="display:flex;align-items:center;justify-content:center;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:4px;width:fit-content;margin:0 auto 3rem;"
+                id="billing-toggle">
+                <button class="toggle-btn toggle-active" onclick="setBilling('monthly',this)">Monthly</button>
+                <button class="toggle-btn toggle-inactive" onclick="setBilling('yearly',this)">Yearly</button>
+            </div>
+
+            <!-- Plans grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
+
+                <!-- Starter -->
+                <div class="plan-card">
+                    <div
+                        style="font-size:0.75rem;font-weight:800;letter-spacing:0.1em;color:var(--muted);text-transform:uppercase;margin-bottom:0.5rem;">
+                        Starter Plan</div>
+                    <div class="plan-price">£3.99</div>
+                    <div style="font-size:0.7rem;color:var(--muted);margin-bottom:1.5rem;">/month</div>
+                    <div style="height:1px;background:var(--border);margin-bottom:1.5rem;"></div>
+
+                    <div class="check-item"><span class="check-icon">✓</span><span>Meals Tailored To Your Blood
+                            Type</span></div>
+                    <div class="check-item text-gray-600"><span class="check-icon">✓</span><span>7 day meals/week
+                            (breakfast, lunch, dinner, snacks)</span></div>
+                    <div class="check-item text-gray-600"><span class="check-icon">✓</span><span>84 meals/month</span>
+                    </div>
+
+
+                    <div class="check-item"><span class="check-icon">✓</span><span>3 Day Meals/Week (Breakfast, Lunch,
+                            Dinner)</span></div>
+                    <div class="check-item"><span class="check-icon">✓</span><span>36 Meals/Month</span></div>
+                    <div class="check-item"><span class="check-icon">✓</span><span>AI-Generated Nutrition Balance</span>
+                    </div>
+                    <div class="check-item"><span class="check-icon">✓</span><span>Ideal For Advanced Dieting &
+                            Health-Focused Users</span></div>
+                    <div class="check-item"><span class="check-icon">✓</span><span>Tailored Workout Plans To Your
+                            Fitness Goals</span></div>
+
+                    <div style="margin-top:1.5rem;">
+                        <button class="btn-outline">Get Started</button>
+                    </div>
+                </div>
+
+                <!-- Elite (featured) -->
+                <div class="plan-card plan-featured" style="margin-top:-1rem;">
+                    <div class="badge">Most Popular</div>
+                    <div
+                        style="font-size:0.75rem;font-weight:800;letter-spacing:0.1em;color:var(--red);text-transform:uppercase;margin-bottom:0.5rem;">
+                        Elite Plan</div>
+                    <div class="plan-price">£9.99</div>
+                    <div style="font-size:0.7rem;color:var(--muted);margin-bottom:1.5rem;">/month</div>
+                    <div style="height:1px;background:var(--border);margin-bottom:1.5rem;"></div>
+
+                    <div class="check-item"><span class="check-icon">✓</span><span>Meals Tailored To Your Blood
+                            Type</span></div>
+
+
+                    <div class="check-item"><span class="check-icon">✓</span><span>7 Day Meals/Week (Breakfast, Lunch,
+                            Dinner, Snacks)</span></div>
+                    <div class="check-item"><span class="check-icon">✓</span><span>84 Meals/Month</span></div>
+
+
+                    <div class="check-item text-gray-600"><span class="check-icon">✓</span><span>3 day meals/week
+                            (breakfast, lunch, dinner)</span></div>
+                    <div class="check-item text-gray-600"><span class="check-icon">✓</span><span>36 meals/month</span>
+                    </div>
+
+                    <div class="check-item"><span class="check-icon">✓</span><span>AI-Generated Nutrition Balance</span>
+                    </div>
+                    <div class="check-item"><span class="check-icon">✓</span><span>Ideal For Advanced Dieting &
+                            Health-Focused Users</span></div>
+                    <div class="check-item"><span class="check-icon">✓</span><span>Tailored Workout Plans To Your
+                            Fitness Goals</span></div>
+
+                    <!-- <div class="discount-banner"
+                        style="background:rgba(224,20,30,0.12);border:1px solid rgba(224,20,30,0.3);border-radius:8px;padding:0.6rem 1rem;font-size:0.72rem;font-weight:700;color:var(--red);text-align:center;margin-top:1rem;">
+                        🔥 Get 50% Discount On The First Month
+                    </div> -->
+                    <div style="margin-top:1rem;">
+                        <button class="btn-primary">Get Started</button>
+                    </div>
+                </div>
+
+                <!-- Pro -->
+                <div class="plan-card">
+                    <div
+                        style="font-size:0.75rem;font-weight:800;letter-spacing:0.1em;color:var(--muted);text-transform:uppercase;margin-bottom:0.5rem;">
+                        Pro Plan</div>
+                    <div class="plan-price">£6.99</div>
+                    <div style="font-size:0.7rem;color:var(--muted);margin-bottom:1.5rem;">/month</div>
+                    <div style="height:1px;background:var(--border);margin-bottom:1.5rem;"></div>
+
+                    <div class="check-item"><span class="check-icon">✓</span><span>Meals Tailored To Your Blood
+                            Type</span></div>
+                    <div class="check-item"><span class="check-icon">✓</span><span>7 Day Meals/Week (Breakfast, Lunch,
+                            Dinner, Snacks)</span></div>
+                    <div class="check-item"><span class="check-icon">✓</span><span>84 Meals/Month</span></div>
+
+                    <div class="check-item text-gray-600"><span class="check-icon">✓</span><span>3 day meals/week
+                            (breakfast, lunch, dinner)</span></div>
+                    <div class="check-item text-gray-600"><span class="check-icon">✓</span><span>36 meals/month</span>
+                    </div>
+
+
+                    <div class="check-item"><span class="check-icon">✓</span><span>AI-Generated Nutrition Balance</span>
+                    </div>
+                    <div class="check-item"><span class="check-icon">✓</span><span>Ideal For Advanced Dieting &
+                            Health-Focused Users</span></div>
+
+                    <div class="check-item text-gray-600"><span class="check-icon">✓</span><span>Tailored workout plans
+                            to your fitness goals</span></div>
+
+                    <!-- <div class="discount-banner"
+                        style="background:rgba(224,20,30,0.12);border:1px solid rgba(224,20,30,0.3);border-radius:8px;padding:0.6rem 1rem;font-size:0.72rem;font-weight:700;color:var(--red);text-align:center;margin-top:1rem;">
+                        🔥 Get 20% Discount On The First Month
+                    </div> -->
+                    <div style="margin-top:1rem;">
+                        <button class="btn-outline">Get Started</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ═══════════════════════════════════════ CONTACT ═══════════════════════════════════════ -->
+    <section id="contact" style="padding:5rem 0;background:var(--bg);">
+        <div class="container">
+            <div class="flex flex-col md:flex-row gap-16">
+
+                <!-- Left -->
+                <div class="flex-1">
+                    <h2 class="section-title mb-4">Contact <span class="accent">Us</span></h2>
+                    <p style="color:var(--muted);font-size:0.82rem;line-height:1.8;max-width:360px;">
+                        Questions About BloodFIT? Our Team Is Ready To Help. Reach Out And We'll Get Back To You As Soon
+                        As Possible.
+                    </p>
+
+                    <div style="margin-top:2rem;display:flex;flex-direction:column;gap:1rem;">
+                        <div style="display:flex;align-items:center;gap:0.75rem;font-size:0.8rem;color:var(--muted);">
+                            <div
+                                style="width:32px;height:32px;background:rgba(224,20,30,0.1);border:1px solid rgba(224,20,30,0.3);border-radius:8px;display:flex;align-items:center;justify-content:center;">
+                                <svg width="14" height="14" fill="none" stroke="var(--red)" stroke-width="2"
+                                    viewBox="0 0 24 24">
+                                    <path
+                                        d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                                    <polyline points="22,6 12,13 2,6" />
+                                </svg>
+                            </div>
+                            support@bloodfit.com
+                        </div>
+                        <div style="display:flex;align-items:center;gap:0.75rem;font-size:0.8rem;color:var(--muted);">
+                            <div
+                                style="width:32px;height:32px;background:rgba(224,20,30,0.1);border:1px solid rgba(224,20,30,0.3);border-radius:8px;display:flex;align-items:center;justify-content:center;">
+                                <svg width="14" height="14" fill="none" stroke="var(--red)" stroke-width="2"
+                                    viewBox="0 0 24 24">
+                                    <path
+                                        d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13.5 19.79 19.79 0 0 1 1.61 5c-.11-1.18.78-2 1.95-2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 10.9a16 16 0 0 0 6 6l1.27-.95a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 18.18z" />
+                                </svg>
+                            </div>
+                            +44 (0) 7700 000000
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right – Form -->
+                <div class="flex-1">
+                    <div style="display:flex;flex-direction:column;gap:0.9rem;">
+                        <input class="input-field" type="text" placeholder="Enter Your Name" />
+                        <input class="input-field" type="email" placeholder="Enter Your Email Address" />
+                        <input class="input-field" type="text" placeholder="Subject" />
+                        <textarea class="input-field" rows="5" placeholder="Enter Your Message"
+                            style="resize:vertical;"></textarea>
+                        <button class="btn-primary" style="margin-top:0.5rem;">Continue</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════ FOOTER ═══════════════════════════════════════ -->
+    <footer style="padding:3rem 0;">
+        <div class="container">
+            <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
+
+                <div>
+                    <div class="logo mb-2">BLOOD<span>FIT</span></div>
+                    <p style="font-size:0.72rem;color:var(--muted);max-width:280px;line-height:1.7;">
+                        <span style="font-weight:700;">EAT, GET, HEAL.</span><br>
+                        Start Your Personalized Blood Type Nutrition And Workout Journey Today.
+                    </p>
+                </div>
+
+                <div class="flex flex-wrap gap-x-8 gap-y-3">
+                    <a href="#hero"
+                        style="font-size:0.72rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted);transition:color 0.2s;"
+                        onmouseover="this.style.color='#e0141e'" onmouseout="this.style.color='var(--muted)'">Home</a>
+                    <a href="#services"
+                        style="font-size:0.72rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted);transition:color 0.2s;"
+                        onmouseover="this.style.color='#e0141e'"
+                        onmouseout="this.style.color='var(--muted)'">Services</a>
+                    <a href="#how"
+                        style="font-size:0.72rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted);transition:color 0.2s;"
+                        onmouseover="this.style.color='#e0141e'" onmouseout="this.style.color='var(--muted)'">How We
+                        Work</a>
+                    <a href="#why"
+                        style="font-size:0.72rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted);transition:color 0.2s;"
+                        onmouseover="this.style.color='#e0141e'" onmouseout="this.style.color='var(--muted)'">Why Us</a>
+                    <a style="font-size:0.72rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted);transition:color 0.2s;"
+                        href="/privacy.html">Privacy Policy </a>
+                    <a style="font-size:0.72rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted);transition:color 0.2s;"
+                        href="/termandcondition.html">Terms And Condition</a>
+                    <a href="#pricing"
+                        style="font-size:0.72rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted);transition:color 0.2s;"
+                        onmouseover="this.style.color='#e0141e'"
+                        onmouseout="this.style.color='var(--muted)'">Pricing</a>
+                    <a href="#contact"
+                        style="font-size:0.72rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted);transition:color 0.2s;"
+                        onmouseover="this.style.color='#e0141e'" onmouseout="this.style.color='var(--muted)'">Contact
+                        Us</a>
+                </div>
+
+            </div>
+
+            <div style="height:1px;background:var(--border);margin:2rem 0;"></div>
+            <p style="text-align:center;font-size:0.68rem;color:#555;">© 2025 BloodFIT. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Billing toggle
+        function setBilling(type, el) {
+            document.querySelectorAll('#billing-toggle .toggle-btn').forEach(b => {
+                b.classList.remove('toggle-active');
+                b.classList.add('toggle-inactive');
+            });
+            el.classList.remove('toggle-inactive');
+            el.classList.add('toggle-active');
+        }
+
+        // Scroll fade-in for elements
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(e => {
+                if (e.isIntersecting) {
+                    e.target.style.opacity = '1';
+                    e.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.card, .plan-card, .why-cell, .section-title, .img-placeholder').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(el);
+        });
+    </script>
+
+</body>
+
+</html>
