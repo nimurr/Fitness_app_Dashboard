@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { RiDeleteBin6Fill } from "react-icons/ri";
+import { useCreateReportMutation } from "../../redux/features/reportAndIssue/reportAndIssue";
 
 const initialData = [
     { id: "#125", name: "Tasmia Hassan", email: "t@gmail.com", problem: "Meal Issue", status: "Pending", date: "2025-09-27", desc: "Not Accurate Results" },
@@ -150,6 +151,9 @@ function Toast({ message }) {
 
 /* ── Main Component ── */
 export default function ReportAndIssue() {
+    const [createReports ] = useCreateReportMutation()
+
+
     const [reports, setReports] = useState(initialData);
     const [viewTarget, setViewTarget] = useState(null);   // index
     const [sendTarget, setSendTarget] = useState(null);   // index

@@ -1,10 +1,10 @@
 import React from 'react';
+import { useGetDashboardStatusQuery } from '../../../redux/features/dashboard/dashboard';
 
-const stats = [
+const getStats = (data) => [
   {
     title: 'Total Users',
-    value: '1,209',
-    change: '+12% From Last Month',
+    value: data?.totalCustomers ?? '—',
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="w-5 h-5">
         <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
@@ -16,8 +16,7 @@ const stats = [
   },
   {
     title: 'Active Subscriptions',
-    value: '$28,900',
-    change: '+12% From Last Month',
+    value: data?.activeSubscription ?? '—',
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="w-5 h-5">
         <line x1="12" y1="1" x2="12" y2="23" />
@@ -27,8 +26,9 @@ const stats = [
   },
   {
     title: 'Monthly Revenue',
-    value: '892',
-    change: '+12% From Last Month',
+    value: data?.monthlyRevenue?.length
+      ? `$${data.monthlyRevenue.reduce((sum, item) => sum + item.total, 0)}`
+      : '—',
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="w-5 h-5">
         <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
@@ -38,8 +38,7 @@ const stats = [
   },
   {
     title: 'Conversion Rate',
-    value: '24.5%',
-    change: '+12% From Last Month',
+    value: data?.conversionRate ?? '—',
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="w-5 h-5">
         <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
@@ -48,7 +47,29 @@ const stats = [
   },
 ];
 
+const SkeletonCard = () => (
+  <div className="relative bg-[#1c1c1e] border border-[#2a2a2c] rounded-2xl px-5 py-5 overflow-hidden animate-pulse">
+    <div className="flex items-start justify-between mb-5">
+      <div className="h-3 w-24 bg-[#2a2a2c] rounded" />
+      <div className="h-5 w-5 bg-[#2a2a2c] rounded" />
+    </div>
+    <div className="h-8 w-20 bg-[#2a2a2c] rounded mb-2" />
+  </div>
+);
+
 const DashboardOverviewStatus = () => {
+  const { data, isLoading } = useGetDashboardStatusQuery();
+
+  const stats = getStats(data?.data);
+
+  if (isLoading) {
+    return (
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 p-5">
+        {Array.from({ length: 4 }).map((_, i) => <SkeletonCard key={i} />)}
+      </div>
+    );
+  }
+
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 p-5">
       {stats.map((stat) => (
@@ -71,14 +92,6 @@ const DashboardOverviewStatus = () => {
           <p className="font-mono text-[28px] font-medium text-[#f0f0f2] tracking-tight leading-none mb-2">
             {stat.value}
           </p>
-
-          {/* Change */}
-          <div className="flex items-center gap-1 text-[11.5px] text-[#3db87a]">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="w-3 h-3">
-              <polyline points="18 15 12 9 6 15" />
-            </svg>
-            {stat.change}
-          </div>
         </div>
       ))}
     </div>
