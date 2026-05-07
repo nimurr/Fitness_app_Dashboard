@@ -1,158 +1,165 @@
 import React, { useState } from 'react';
-import { FiPlus, FiEdit2, FiTrash2, FiX, FiCheck, FiDollarSign, FiList, FiTag } from 'react-icons/fi';
+import { FaTimes, FaPlus } from 'react-icons/fa';
+import {
+  FiCheckCircle, FiXCircle, FiStar, FiCalendar,
+  FiList, FiDollarSign, FiHash, FiTrash2, FiPlusCircle, FiSearch
+} from 'react-icons/fi';
+import { useCreateMealPlanMutation, useGetAllPlansQuery } from '../../redux/features/plan/plan';
 
-const initialPlans = [
-  {
-    id: 1,
-    name: 'Standard',
-    price: 9.00,
-    features: ['Limited profile views per day', 'Basic search filters', 'Email support'],
-    popular: false,
-  },
-  {
-    id: 2,
-    name: 'Pro',
-    price: 19.00,
-    features: ['Unlimited profile views', 'Advanced search filters', 'Priority support'],
-    popular: true,
-  },
-  {
-    id: 3,
-    name: 'Elite',
-    price: 39.00,
-    features: ['Everything in Pro', 'Dedicated account manager', '24/7 phone support'],
-    popular: false,
-  },
-];
+const PAGE_SIZE = 6;
 
-const EMPTY_FORM = { name: '', price: '', features: '', popular: false };
+/* ── Helpers ── */
+const getLocalized = (field, locale = 'en-US') => {
+  if (!field) return '—';
+  if (typeof field === 'string') return field;
+  if (typeof field === 'object') {
+    return field[locale] || field['en'] || Object.values(field)[0] || '—';
+  }
+  return String(field);
+};
 
-const Field = ({ label, icon: Icon, children }) => (
-  <div>
-    <label className="flex items-center gap-1.5 text-xs uppercase tracking-widest text-[#555] font-medium mb-2">
-      <Icon size={13} className="text-red-400" /> {label}
-    </label>
-    {children}
-  </div>
+/* ── Shared Input Styles ── */
+const inputCls = `w-full bg-[#1c1c1e] border border-[#2a2a2c] rounded-xl px-3 py-2.5 text-sm
+  text-[#f0f0f2] placeholder-[#444] focus:outline-none focus:border-red-700 transition-colors`;
+const labelCls = `block text-[10px] text-[#555] uppercase tracking-widest font-medium mb-1.5`;
+
+/* ── Toggle Switch ── */
+const Toggle = ({ checked, onChange, label }) => (
+  <label className="flex items-center justify-between cursor-pointer">
+    <span className="text-sm text-[#ccc]">{label}</span>
+    <div
+      onClick={() => onChange(!checked)}
+      className={`relative w-10 h-5 rounded-full transition-colors duration-200 shrink-0
+        ${checked ? 'bg-red-700' : 'bg-[#2a2a2c]'}`}
+    >
+      <div className={`absolute top-0.5 w-4 h-4 rounded-full bg-white shadow transition-transform duration-200
+        ${checked ? 'translate-x-5' : 'translate-x-0.5'}`} />
+    </div>
+  </label>
 );
 
-const inputCls = `w-full bg-[#252527] border border-[#2a2a2c] rounded-xl px-4 py-3
-  text-sm text-[#f0f0f2] placeholder-[#444] focus:outline-none focus:border-red-700
-  transition-colors`;
-
-/* ── Add / Edit Modal ── */
-const PlanModal = ({ mode, plan, onClose, onSave }) => {
-  const [form, setForm] = useState(
-    plan
-      ? { name: plan.name, price: plan.price, features: plan.features.join('\n'), popular: plan.popular }
-      : EMPTY_FORM
-  );
-
-  const handle = (k, v) => setForm(f => ({ ...f, [k]: v }));
-
-  const submit = () => {
-    if (!form.name.trim() || !form.price) return;
-    onSave({
-      name: form.name.trim(),
-      price: parseFloat(form.price),
-      features: form.features.split('\n').map(s => s.trim()).filter(Boolean),
-      popular: form.popular,
-    });
-    onClose();
-  };
+/* ── Plan Card ── */
+const PlanCard = ({ plan, onViewDetails }) => {
+  const planName = getLocalized(plan.name);
+  const monthlyPrice = plan.pricing?.monthly?.amount ?? plan.pricing?.monthly?.price ?? '—';
+  const yearlyPrice = plan.pricing?.yearly?.amount ?? plan.pricing?.yearly?.price ?? '—';
+  const currency = plan.pricing?.monthly?.currency ?? 'USD';
+  const features = Array.isArray(plan.features)
+    ? plan.features.map((f, i) => ({
+      id: i,
+      label: f?.label ?? getLocalized(f),
+      included: f?.included ?? true,
+    }))
+    : [];
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-sm px-4"
-      onClick={onClose}
-    >
-      <div
-        className="bg-[#1c1c1e] border border-[#2a2a2c] rounded-2xl w-full max-w-md shadow-2xl overflow-hidden"
-        onClick={e => e.stopPropagation()}
-      >
-        {/* Header */}
-        <div className="flex items-center justify-between px-6 py-5 border-b border-[#252527]">
+    <div className={`relative bg-[#1c1c1e] border rounded-2xl p-7 flex flex-col gap-5
+      transition-all duration-200 hover:border-red-700/40 hover:-translate-y-0.5
+      ${plan.isPopular ? 'border-red-700/50' : 'border-[#2a2a2c]'}`}>
+
+      {/* Popular badge */}
+      {plan.isPopular && (
+        <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
+          <span className="px-4 py-1.5 rounded-full bg-red-700 text-white text-xs font-bold
+            tracking-wider shadow-lg shadow-red-900/40">
+            POPULAR
+          </span>
+        </div>
+      )}
+
+      {/* Header: name + status */}
+      <div className="flex items-start justify-between gap-2">
+        <div>
+          <div className="flex items-center gap-2.5 mb-1">
+            <div className="w-8 h-8 rounded-lg bg-red-700/20 flex items-center justify-center shrink-0">
+              <FiStar size={14} className="text-red-400" />
+            </div>
+            <h3 className="text-[#f0f0f2] font-semibold text-lg">{planName}</h3>
+          </div>
+          <p className="text-[#555] text-[10px] uppercase tracking-widest pl-10">{plan.slug}</p>
+          <div className="w-8 h-0.5 bg-red-700 rounded mt-2 ml-10" />
+        </div>
+        {/* Active badge */}
+        <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px]
+          font-semibold border shrink-0
+          ${plan.isActive
+            ? 'bg-emerald-700/20 text-emerald-400 border-emerald-700/30'
+            : 'bg-[#2a2a2c] text-[#555] border-[#333]'}`}>
+          {plan.isActive
+            ? <FiCheckCircle size={10} />
+            : <FiXCircle size={10} />}
+          {plan.isActive ? 'Active' : 'Inactive'}
+        </span>
+      </div>
+
+      {/* Meal Limits */}
+      <div className="grid grid-cols-2 gap-2">
+        <div className="bg-[#252527] rounded-xl px-3 py-2.5 flex items-center gap-2">
+          <div className="w-6 h-6 rounded-md bg-red-700/20 flex items-center justify-center shrink-0">
+            <FiCalendar size={11} className="text-red-400" />
+          </div>
           <div>
-            <h2 className="text-lg font-semibold text-[#f0f0f2]">
-              {mode === 'add' ? 'Add New Plan' : 'Edit Plan'}
-            </h2>
-            <p className="text-sm text-[#555] mt-0.5">
-              {mode === 'add' ? 'Fill in the details below' : `Editing "${plan.name}"`}
+            <p className="text-[9px] text-[#555] uppercase tracking-widest">Per Week</p>
+            <p className="text-sm text-[#f0f0f2] font-semibold">
+              {plan.limits?.mealsPerWeek ?? '—'}
             </p>
           </div>
-          <button
-            onClick={onClose}
-            className="w-8 h-8 rounded-full bg-[#2a2a2c] flex items-center justify-center
-              text-[#666] hover:text-white hover:bg-[#3a3a3c] transition-colors"
-          >
-            <FiX size={15} />
-          </button>
         </div>
-
-        {/* Body */}
-        <div className="px-6 py-6 flex flex-col gap-5">
-          <Field label="Plan Name" icon={FiTag}>
-            <input
-              className={inputCls}
-              placeholder="e.g. Standard"
-              value={form.name}
-              onChange={e => handle('name', e.target.value)}
-            />
-          </Field>
-
-          <Field label="Price / Month ($)" icon={FiDollarSign}>
-            <input
-              type="number"
-              min="0"
-              step="0.01"
-              className={inputCls}
-              placeholder="e.g. 9.00"
-              value={form.price}
-              onChange={e => handle('price', e.target.value)}
-            />
-          </Field>
-
-          <Field label="Features (one per line)" icon={FiList}>
-            <textarea
-              rows={4}
-              className={`${inputCls} resize-none leading-relaxed`}
-              placeholder={"Limited profile views per day\nBasic filters\nEmail support"}
-              value={form.features}
-              onChange={e => handle('features', e.target.value)}
-            />
-          </Field>
-
-          {/* Popular toggle */}
-          <button
-            onClick={() => handle('popular', !form.popular)}
-            className={`flex items-center gap-3 px-4 py-3.5 rounded-xl border transition-all duration-200
-              ${form.popular
-                ? 'bg-red-700/20 border-red-700/40'
-                : 'bg-[#252527] border-[#2a2a2c] hover:border-[#3a3a3c]'}`}
-          >
-            <div className={`w-5 h-5 rounded-md border flex items-center justify-center transition-all
-              ${form.popular ? 'bg-red-700 border-red-700' : 'border-[#444] bg-transparent'}`}>
-              {form.popular && <FiCheck size={11} className="text-white" />}
-            </div>
-            <span className="text-sm text-[#ccc]">Mark as Popular</span>
-          </button>
+        <div className="bg-[#252527] rounded-xl px-3 py-2.5 flex items-center gap-2">
+          <div className="w-6 h-6 rounded-md bg-red-700/20 flex items-center justify-center shrink-0">
+            <FiCalendar size={11} className="text-red-400" />
+          </div>
+          <div>
+            <p className="text-[9px] text-[#555] uppercase tracking-widest">Per Month</p>
+            <p className="text-sm text-[#f0f0f2] font-semibold">
+              {plan.limits?.mealsPerMonth ?? '—'}
+            </p>
+          </div>
         </div>
+      </div>
 
-        {/* Footer */}
-        <div className="px-6 pb-6 flex gap-3">
-          <button
-            onClick={onClose}
-            className="flex-1 py-3 rounded-xl bg-[#252527] text-[#aaa] text-sm
-              font-semibold hover:bg-[#2a2a2c] transition-colors"
-          >
-            Cancel
+      {/* Features */}
+      {features.length > 0 && (
+        <ul className="flex flex-col gap-2 flex-1">
+          {features.map(({ id, label, included }) => (
+            <li key={id} className="flex items-start gap-2.5">
+              <div className={`w-5 h-5 rounded-md flex items-center justify-center shrink-0 mt-0.5
+                ${included ? 'bg-red-700/20' : 'bg-[#252527]'}`}>
+                {included
+                  ? <FiCheckCircle size={11} className="text-red-400" />
+                  : <FiXCircle size={11} className="text-[#444]" />}
+              </div>
+              <span className={`text-sm leading-relaxed ${included ? 'text-[#aaa]' : 'text-[#444] line-through'}`}>
+                {label}
+              </span>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      {/* Pricing */}
+      <div className="border-t border-[#252527] pt-5 flex items-end justify-between">
+        <div>
+          <div className="flex items-end gap-1">
+            <span className="text-red-400 text-base font-semibold mb-1">{currency}</span>
+            <span className="text-[#f0f0f2] text-4xl font-bold leading-none">{monthlyPrice}</span>
+            <span className="text-[#555] text-sm mb-1.5 ml-1">/ mo</span>
+          </div>
+          <p className="text-[10px] text-[#555] mt-0.5">
+            {currency} {yearlyPrice} / year
+          </p>
+        </div>
+        <div className='flex items-center  justify-end gap-3'>
+          <button className='px-4 py-1 border rounded-lg border-red-700/40 bg-red-500 text-white transition-all duration-200'>
+            Delete
           </button>
+          {/* View Details */}
           <button
-            onClick={submit}
-            className="flex-1 py-3 rounded-xl bg-red-700 hover:bg-red-600 text-white
-              text-sm font-semibold transition-colors"
+            onClick={() => onViewDetails(plan)}
+            className="px-4 py-2 rounded-xl bg-[#252527] border border-[#2a2a2c] text-[#aaa]
+            text-xs font-semibold hover:border-red-700/40 hover:text-red-400 transition-all duration-200"
           >
-            {mode === 'add' ? 'Add Plan' : 'Save Changes'}
+            View Details
           </button>
         </div>
       </div>
@@ -160,179 +167,499 @@ const PlanModal = ({ mode, plan, onClose, onSave }) => {
   );
 };
 
-/* ── Delete Confirm Modal ── */
-const DeleteModal = ({ plan, onClose, onConfirm }) => (
-  <div
-    className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-sm px-4"
-    onClick={onClose}
-  >
+/* ── Plan Detail Modal ── */
+const PlanModal = ({ plan, onClose }) => {
+  if (!plan) return null;
+
+  const planName = getLocalized(plan.name);
+  const monthlyPrice = plan.pricing?.monthly?.amount ?? plan.pricing?.monthly?.price ?? '—';
+  const yearlyPrice = plan.pricing?.yearly?.amount ?? plan.pricing?.yearly?.price ?? '—';
+  const currency = plan.pricing?.monthly?.currency ?? 'USD';
+
+  const sections = [
+    { icon: FiHash, label: 'Slug', value: plan.slug },
+    { icon: FiCalendar, label: 'Meals / Month', value: plan.limits?.mealsPerMonth ?? '—' },
+    { icon: FiCalendar, label: 'Meals / Week', value: plan.limits?.mealsPerWeek ?? '—' },
+    { icon: FiDollarSign, label: 'Monthly Price', value: `${currency} ${monthlyPrice}` },
+    { icon: FiDollarSign, label: 'Yearly Price', value: `${currency} ${yearlyPrice}` },
+  ];
+
+  const features = Array.isArray(plan.features)
+    ? plan.features.map((f, i) => ({
+      id: i,
+      label: f?.label ?? getLocalized(f),
+      included: f?.included ?? true,
+    }))
+    : [];
+
+  return (
     <div
-      className="bg-[#1c1c1e] border border-[#2a2a2c] rounded-2xl w-full max-w-sm shadow-2xl p-7"
-      onClick={e => e.stopPropagation()}
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-sm px-4"
+      onClick={onClose}
     >
-      <div className="w-14 h-14 rounded-2xl bg-red-700/20 flex items-center justify-center mx-auto mb-5">
-        <FiTrash2 size={24} className="text-red-400" />
-      </div>
-      <h3 className="text-lg font-semibold text-[#f0f0f2] text-center">Delete Plan</h3>
-      <p className="text-[#555] text-sm text-center mt-2 leading-relaxed">
-        Are you sure you want to delete{' '}
-        <span className="text-[#ccc] font-medium">"{plan?.name}"</span>?
-        This action cannot be undone.
-      </p>
-      <div className="flex gap-3 mt-6">
-        <button
-          onClick={onClose}
-          className="flex-1 py-3 rounded-xl bg-[#252527] text-[#aaa] text-sm
-            font-semibold hover:bg-[#2a2a2c] transition-colors"
-        >
-          Cancel
-        </button>
-        <button
-          onClick={() => { onConfirm(plan.id); onClose(); }}
-          className="flex-1 py-3 rounded-xl bg-red-700 hover:bg-red-600 text-white
-            text-sm font-semibold transition-colors"
-        >
-          Delete
-        </button>
-      </div>
-    </div>
-  </div>
-);
-
-/* ── Plan Card ── */
-const PlanCard = ({ plan, onEdit, onDelete }) => (
-  <div className={`relative bg-[#1c1c1e] border rounded-2xl p-7 flex flex-col gap-6
-    transition-all duration-200 hover:border-red-700/40 hover:-translate-y-0.5
-    ${plan.popular ? 'border-red-700/50' : 'border-[#2a2a2c]'}`}>
-
-    {plan.popular && (
-      <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
-        <span className="px-4 py-1.5 rounded-full bg-red-700 text-white text-xs font-bold
-          tracking-wider shadow-lg shadow-red-900/40">
-          POPULAR
-        </span>
-      </div>
-    )}
-
-    {/* Plan name */}
-    <div>
-      <h3 className="text-[#f0f0f2] font-semibold text-xl">{plan.name}</h3>
-      <div className="w-8 h-0.5 bg-red-700 rounded mt-2" />
-    </div>
-
-    {/* Features */}
-    <ul className="flex flex-col gap-3 flex-1">
-      {plan.features.map((f, i) => (
-        <li key={i} className="flex items-start gap-3">
-          <div className="w-5 h-5 rounded-md bg-red-700/20 flex items-center justify-center shrink-0 mt-0.5">
-            <FiCheck size={11} className="text-red-400" />
+      <div
+        className="bg-[#1c1c1e] border border-[#2a2a2c] rounded-2xl w-full max-w-sm shadow-2xl
+          overflow-hidden max-h-[90vh] flex flex-col"
+        onClick={e => e.stopPropagation()}
+      >
+        {/* Banner */}
+        <div className="relative h-20 bg-gradient-to-r from-red-900/50 via-[#1c1c1e] to-[#1c1c1e] shrink-0">
+          <div className="absolute inset-0 opacity-10"
+            style={{ backgroundImage: 'radial-gradient(circle at 20% 50%, #cc1a1a 0%, transparent 60%)' }} />
+          <button onClick={onClose}
+            className="absolute top-3 right-3 w-7 h-7 rounded-full bg-[#2a2a2c] flex items-center
+              justify-center text-[#888] hover:text-white hover:bg-[#3a3a3c] transition-colors">
+            <FaTimes size={11} />
+          </button>
+          <div className="absolute -bottom-7 left-5">
+            <div className="w-14 h-14 rounded-xl border-2 border-red-700 bg-red-700/20
+              flex items-center justify-center shadow-xl">
+              <FiStar size={22} className="text-red-400" />
+            </div>
           </div>
-          <span className="text-[#aaa] text-sm leading-relaxed">{f}</span>
-        </li>
-      ))}
-    </ul>
+        </div>
 
-    {/* Price */}
-    <div className="flex items-end gap-1 border-t border-[#252527] pt-5">
-      <span className="text-red-400 text-base font-semibold mb-1">$</span>
-      <span className="text-[#f0f0f2] text-4xl font-bold leading-none">
-        {plan.price.toFixed(2)}
-      </span>
-      <span className="text-[#555] text-sm mb-1.5 ml-1">/ month</span>
-    </div>
+        {/* Name + badges */}
+        <div className="pt-10 px-5 pb-1 flex items-start justify-between gap-2 shrink-0">
+          <div>
+            <h3 className="text-[#f0f0f2] font-semibold text-base">{planName}</h3>
+            <p className="text-[#555] text-[11px] mt-0.5 uppercase tracking-widest">{plan.slug}</p>
+          </div>
+          <div className="flex flex-col items-end gap-1 mt-1">
+            <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-semibold border
+              ${plan.isActive
+                ? 'bg-emerald-700/20 text-emerald-400 border-emerald-700/30'
+                : 'bg-[#2a2a2c] text-[#555] border-[#333]'}`}>
+              {plan.isActive ? <FiCheckCircle size={10} /> : <FiXCircle size={10} />}
+              {plan.isActive ? 'Active' : 'Inactive'}
+            </span>
+            {plan.isPopular && (
+              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px]
+                font-semibold border bg-amber-700/20 text-amber-400 border-amber-700/30">
+                <FiStar size={10} /> Popular
+              </span>
+            )}
+          </div>
+        </div>
 
-    {/* Actions */}
-    <div className="flex gap-3">
-      <button
-        onClick={() => onEdit(plan)}
-        className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl
-          bg-[#252527] border border-[#2a2a2c] text-[#aaa] text-sm font-medium
-          hover:border-red-700/40 hover:text-red-400 transition-all duration-200"
-      >
-        <FiEdit2 size={14} /> Edit
-      </button>
-      <button
-        onClick={() => onDelete(plan)}
-        className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl
-          bg-red-700/10 border border-red-700/20 text-red-400 text-sm font-medium
-          hover:bg-red-700 hover:text-white hover:border-red-700 transition-all duration-200"
-      >
-        <FiTrash2 size={14} /> Delete
-      </button>
+        <div className="mx-5 my-3 border-t border-[#252527] shrink-0" />
+
+        {/* Scrollable content */}
+        <div className="px-5 flex flex-col gap-2.5 overflow-y-auto flex-1">
+          {sections.map(({ icon: Icon, label, value }) => (
+            <div key={label} className="bg-[#252527] rounded-xl px-4 py-3">
+              <div className="flex items-center gap-2 mb-1.5">
+                <div className="w-6 h-6 rounded-md bg-red-700/20 flex items-center justify-center shrink-0">
+                  <Icon size={12} className="text-red-400" />
+                </div>
+                <span className="text-[#555] text-[10px] uppercase tracking-widest font-medium">{label}</span>
+              </div>
+              <p className="text-[#f0f0f2] text-sm font-medium pl-8">{value}</p>
+            </div>
+          ))}
+
+          {features.length > 0 && (
+            <div className="bg-[#252527] rounded-xl px-4 py-3">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-6 h-6 rounded-md bg-red-700/20 flex items-center justify-center shrink-0">
+                  <FiList size={12} className="text-red-400" />
+                </div>
+                <span className="text-[#555] text-[10px] uppercase tracking-widest font-medium">Features</span>
+              </div>
+              <div className="pl-8 flex flex-col gap-1.5">
+                {features.map(({ id, label, included }) => (
+                  <div key={id} className="flex items-center gap-2">
+                    {included
+                      ? <FiCheckCircle size={11} className="text-emerald-400 shrink-0" />
+                      : <FiXCircle size={11} className="text-[#555] shrink-0" />}
+                    <span className={`text-[11px] ${included ? 'text-[#ccc]' : 'text-[#555]'}`}>{label}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+
+        <div className="px-5 pb-5 mt-3 shrink-0">
+          <button onClick={onClose}
+            className="w-full py-2.5 rounded-xl bg-red-700 hover:bg-red-600 transition-colors
+              text-white text-sm font-semibold">
+            Close
+          </button>
+        </div>
+      </div>
     </div>
-  </div>
-);
+  );
+};
+
+/* ── Create Plan Modal ── */
+const EMPTY_FEATURE = () => ({ key: '', label: '', included: true });
+const INITIAL_FORM = {
+  name: '', slug: '',
+  pricing: { monthly: { price: '' }, yearly: { price: '' } },
+  limits: { mealsPerWeek: '', mealsPerMonth: '' },
+  features: [EMPTY_FEATURE()],
+  isPopular: false, isActive: true,
+};
+
+const CreatePlanModal = ({ onClose, onSuccess }) => {
+  const [form, setForm] = useState(INITIAL_FORM);
+  const [errors, setErrors] = useState({});
+  const [createMealPlan, { isLoading }] = useCreateMealPlanMutation();
+
+  const set = (path, value) => {
+    setForm(prev => {
+      const next = structuredClone(prev);
+      const keys = path.split('.');
+      let ref = next;
+      for (let i = 0; i < keys.length - 1; i++) ref = ref[keys[i]];
+      ref[keys[keys.length - 1]] = value;
+      return next;
+    });
+    if (errors[path]) setErrors(e => { const n = { ...e }; delete n[path]; return n; });
+  };
+
+  const autoSlug = (name) => name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+  const addFeature = () => setForm(p => ({ ...p, features: [...p.features, EMPTY_FEATURE()] }));
+  const removeFeature = (i) => setForm(p => ({ ...p, features: p.features.filter((_, idx) => idx !== i) }));
+  const setFeature = (i, field, value) =>
+    setForm(p => {
+      const features = [...p.features];
+      features[i] = { ...features[i], [field]: value };
+      return { ...p, features };
+    });
+
+  const validate = () => {
+    const e = {};
+    if (!form.name.trim()) e.name = 'Name is required';
+    if (!form.slug.trim()) e.slug = 'Slug is required';
+    if (form.pricing.monthly.price === '') e['pricing.monthly.price'] = 'Required';
+    if (form.pricing.yearly.price === '') e['pricing.yearly.price'] = 'Required';
+    if (form.limits.mealsPerWeek === '') e['limits.mealsPerWeek'] = 'Required';
+    if (form.limits.mealsPerMonth === '') e['limits.mealsPerMonth'] = 'Required';
+    form.features.forEach((f, i) => {
+      if (!f.label.trim()) e[`feature_label_${i}`] = 'Label required';
+    });
+    setErrors(e);
+    return Object.keys(e).length === 0;
+  };
+
+  const handleSubmit = async () => {
+    if (!validate()) return;
+    const payload = {
+      name: form.name.trim(),
+      slug: form.slug.trim(),
+      pricing: {
+        monthly: { price: parseFloat(form.pricing.monthly.price) },
+        yearly: { price: parseFloat(form.pricing.yearly.price) },
+      },
+      limits: {
+        mealsPerWeek: parseInt(form.limits.mealsPerWeek),
+        mealsPerMonth: parseInt(form.limits.mealsPerMonth),
+      },
+      features: form.features.map(f => ({
+        key: f.key || f.label.toLowerCase().replace(/\s+/g, '_'),
+        label: f.label.trim(),
+        included: f.included,
+      })),
+      isPopular: form.isPopular,
+      isActive: form.isActive,
+    };
+    try {
+      await createMealPlan(payload).unwrap();
+      onSuccess?.();
+      onClose();
+    } catch (err) {
+      console.error('Create plan failed:', err);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-sm px-4"
+      onClick={onClose}>
+      <div className="bg-[#1c1c1e] border border-[#2a2a2c] rounded-2xl w-full max-w-lg shadow-2xl
+          flex flex-col max-h-[90vh]"
+        onClick={e => e.stopPropagation()}>
+
+        {/* Header */}
+        <div className="flex items-center justify-between px-6 py-4 border-b border-[#2a2a2c] shrink-0">
+          <div>
+            <h3 className="text-[#f0f0f2] font-semibold text-base">Create New Plan</h3>
+            <p className="text-[#555] text-[11px] mt-0.5">Fill in the details to add a subscription plan</p>
+          </div>
+          <button onClick={onClose}
+            className="w-7 h-7 rounded-full bg-[#2a2a2c] flex items-center justify-center
+              text-[#888] hover:text-white hover:bg-[#3a3a3c] transition-colors">
+            <FaTimes size={11} />
+          </button>
+        </div>
+
+        {/* Body */}
+        <div className="overflow-y-auto px-6 py-5 flex flex-col gap-5 flex-1">
+
+          {/* Basic Info */}
+          <div className="bg-[#252527] rounded-xl p-4 flex flex-col gap-4">
+            <p className="text-[10px] text-[#555] uppercase tracking-widest font-medium">Basic Info</p>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className={labelCls}>Plan Name *</label>
+                <input className={`${inputCls} ${errors.name ? 'border-red-700' : ''}`}
+                  placeholder="e.g. Elite" value={form.name}
+                  onChange={e => {
+                    set('name', e.target.value);
+                    if (!form.slug || form.slug === autoSlug(form.name))
+                      set('slug', autoSlug(e.target.value));
+                  }} />
+                {errors.name && <p className="text-red-400 text-[10px] mt-1">{errors.name}</p>}
+              </div>
+              <div>
+                <label className={labelCls}>Slug *</label>
+                <input className={`${inputCls} ${errors.slug ? 'border-red-700' : ''}`}
+                  placeholder="e.g. elite" value={form.slug}
+                  onChange={e => set('slug', autoSlug(e.target.value))} />
+                {errors.slug && <p className="text-red-400 text-[10px] mt-1">{errors.slug}</p>}
+              </div>
+            </div>
+            <div className="flex flex-col gap-3">
+              <Toggle label="Active" checked={form.isActive} onChange={v => set('isActive', v)} />
+              <Toggle label="Mark as Popular" checked={form.isPopular} onChange={v => set('isPopular', v)} />
+            </div>
+          </div>
+
+          {/* Pricing */}
+          <div className="bg-[#252527] rounded-xl p-4 flex flex-col gap-3">
+            <p className="text-[10px] text-[#555] uppercase tracking-widest font-medium">Pricing (USD)</p>
+            <div className="grid grid-cols-2 gap-3">
+              {[
+                { label: 'Monthly Price *', path: 'pricing.monthly.price', placeholder: '20.99' },
+                { label: 'Yearly Price *', path: 'pricing.yearly.price', placeholder: '200' },
+              ].map(({ label, path, placeholder }) => (
+                <div key={path}>
+                  <label className={labelCls}>{label}</label>
+                  <div className="relative">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#555] text-sm">$</span>
+                    <input type="number" min="0" step="0.01"
+                      className={`${inputCls} pl-7 ${errors[path] ? 'border-red-700' : ''}`}
+                      placeholder={placeholder}
+                      value={path.split('.').reduce((o, k) => o?.[k], form)}
+                      onChange={e => set(path, e.target.value)} />
+                  </div>
+                  {errors[path] && <p className="text-red-400 text-[10px] mt-1">{errors[path]}</p>}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Limits */}
+          <div className="bg-[#252527] rounded-xl p-4 flex flex-col gap-3">
+            <p className="text-[10px] text-[#555] uppercase tracking-widest font-medium">Meal Limits</p>
+            <div className="grid grid-cols-2 gap-3">
+              {[
+                { label: 'Meals / Week *', path: 'limits.mealsPerWeek', placeholder: '4' },
+                { label: 'Meals / Month *', path: 'limits.mealsPerMonth', placeholder: '12' },
+              ].map(({ label, path, placeholder }) => (
+                <div key={path}>
+                  <label className={labelCls}>{label}</label>
+                  <input type="number" min="0"
+                    className={`${inputCls} ${errors[path] ? 'border-red-700' : ''}`}
+                    placeholder={placeholder}
+                    value={path.split('.').reduce((o, k) => o?.[k], form)}
+                    onChange={e => set(path, e.target.value)} />
+                  {errors[path] && <p className="text-red-400 text-[10px] mt-1">{errors[path]}</p>}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Features */}
+          <div className="bg-[#252527] rounded-xl p-4 flex flex-col gap-3">
+            <div className="flex items-center justify-between">
+              <p className="text-[10px] text-[#555] uppercase tracking-widest font-medium">Features</p>
+              <button onClick={addFeature}
+                className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg
+                  bg-red-700/20 border border-red-700/30 text-red-400 text-[10px] font-semibold
+                  hover:bg-red-700 hover:text-white transition-all">
+                <FiPlusCircle size={11} /> Add Feature
+              </button>
+            </div>
+            <div className="flex flex-col gap-2">
+              {form.features.map((feature, i) => (
+                <div key={i} className="bg-[#1c1c1e] rounded-xl p-3 flex flex-col gap-2">
+                  <div className="flex items-center gap-2">
+                    <div className="flex-1">
+                      <input className={`${inputCls} ${errors[`feature_label_${i}`] ? 'border-red-700' : ''}`}
+                        placeholder="Feature label (e.g. AI Nutrition Balance)"
+                        value={feature.label}
+                        onChange={e => setFeature(i, 'label', e.target.value)} />
+                      {errors[`feature_label_${i}`] && (
+                        <p className="text-red-400 text-[10px] mt-1">{errors[`feature_label_${i}`]}</p>
+                      )}
+                    </div>
+                    <button onClick={() => setFeature(i, 'included', !feature.included)}
+                      className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 transition-colors
+                        ${feature.included
+                          ? 'bg-emerald-700/20 text-emerald-400 border border-emerald-700/30'
+                          : 'bg-[#2a2a2c] text-[#555] border border-[#333]'}`}>
+                      <FiCheckCircle size={13} />
+                    </button>
+                    {form.features.length > 1 && (
+                      <button onClick={() => removeFeature(i)}
+                        className="w-7 h-7 rounded-lg bg-red-700/10 border border-red-700/20
+                          flex items-center justify-center text-red-500 hover:bg-red-700/30 transition-colors shrink-0">
+                        <FiTrash2 size={12} />
+                      </button>
+                    )}
+                  </div>
+                  <input className={`${inputCls} text-[11px] text-[#666]`}
+                    placeholder="Key (optional) — auto-generated if blank"
+                    value={feature.key}
+                    onChange={e => setFeature(i, 'key', e.target.value)} />
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div className="px-6 py-4 border-t border-[#2a2a2c] flex items-center gap-3 shrink-0">
+          <button onClick={onClose}
+            className="flex-1 py-2.5 rounded-xl bg-[#252527] border border-[#2a2a2c]
+              text-[#888] text-sm font-semibold hover:text-white transition-colors">
+            Cancel
+          </button>
+          <button onClick={handleSubmit} disabled={isLoading}
+            className="flex-1 py-2.5 rounded-xl bg-red-700 hover:bg-red-600 transition-colors
+              text-white text-sm font-semibold disabled:opacity-50 flex items-center justify-center gap-2">
+            {isLoading ? (
+              <>
+                <svg className="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                </svg>
+                Creating…
+              </>
+            ) : (
+              <><FaPlus size={11} /> Create Plan</>
+            )}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 /* ── Main Page ── */
 const Subscriptions = () => {
-  const [plans, setPlans]         = useState(initialPlans);
-  const [addOpen, setAddOpen]     = useState(false);
-  const [editPlan, setEditPlan]   = useState(null);
-  const [deletePlan, setDeletePlan] = useState(null);
+  const { data, isLoading, refetch } = useGetAllPlansQuery();
+  const allPlans = data?.data ?? [];
 
-  const handleAdd    = (data) => setPlans(p => [...p, { id: Date.now(), ...data }]);
-  const handleEdit   = (data) => setPlans(p => p.map(pl => pl.id === editPlan.id ? { ...pl, ...data } : pl));
-  const handleDelete = (id)   => setPlans(p => p.filter(pl => pl.id !== id));
+  const [currentPage, setCurrentPage] = useState(1);
+  const [selectedPlan, setSelectedPlan] = useState(null);
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [search, setSearch] = useState('');
+
+  const filtered = allPlans.filter(p =>
+    getLocalized(p.name).toLowerCase().includes(search.toLowerCase())
+  );
+  const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
+  const paginated = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
 
   return (
     <div className="bg-[#111111] min-h-screen p-7 text-[#f0f0f2]">
 
       {/* Header */}
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-2xl font-semibold text-[#f0f0f2]">Subscriptions</h1>
-          <p className="text-sm text-[#555] mt-1">Manage your pricing plans</p>
+          <h1 className="text-2xl font-semibold text-[#f0f0f2]">Meal Plans</h1>
+          <p className="text-sm text-[#555] mt-1">Manage subscription plans & dietary limits</p>
         </div>
-        <button
-          onClick={() => setAddOpen(true)}
-          className="flex items-center gap-2 px-5 py-3 rounded-xl bg-red-700 hover:bg-red-600
-            text-white text-sm font-semibold transition-colors shadow-lg shadow-red-900/30"
-        >
-          <FiPlus size={16} /> Add Plan
-        </button>
+
+        <div className="flex items-center gap-3">
+          {/* Search */}
+          <div className="flex items-center gap-2 bg-[#1c1c1e] border border-[#2a2a2c] rounded-xl
+            px-4 py-2.5 focus-within:border-red-700 transition-colors w-56">
+            <FiSearch size={15} className="text-[#555] shrink-0" />
+            <input type="text" placeholder="Search plan…" value={search}
+              onChange={e => { setSearch(e.target.value); setCurrentPage(1); }}
+              className="bg-transparent text-sm text-[#ccc] placeholder-[#444] focus:outline-none w-full" />
+          </div>
+
+          {/* Create button */}
+          <button onClick={() => setShowCreateModal(true)}
+            className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-red-700 hover:bg-red-600
+              text-white text-sm font-semibold transition-colors shadow-lg shadow-red-900/30 whitespace-nowrap">
+            <FaPlus size={13} /> Create New Plan
+          </button>
+        </div>
       </div>
 
-      {/* Stats bar */}
-      <div className="grid grid-cols-3 gap-4 mb-8">
-        {[
-          { label: 'Total Plans',  value: plans.length },
-          { label: 'Avg. Price',   value: `$${(plans.reduce((a, p) => a + p.price, 0) / (plans.length || 1)).toFixed(2)}` },
-          { label: 'Popular Plan', value: plans.find(p => p.popular)?.name ?? '—' },
-        ].map(({ label, value }) => (
-          <div key={label} className="bg-[#1c1c1e] border border-[#2a2a2c] rounded-xl px-5 py-4">
-            <p className="text-[#555] text-xs uppercase tracking-widest mb-1.5">{label}</p>
-            <p className="text-[#f0f0f2] text-xl font-semibold">{value}</p>
-          </div>
-        ))}
-      </div>
+      {/* Loading */}
+      {isLoading && (
+        <div className="flex items-center justify-center py-24 text-[#444] text-sm gap-3">
+          <svg className="animate-spin w-5 h-5 text-red-500" viewBox="0 0 24 24" fill="none">
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+          </svg>
+          Loading plans…
+        </div>
+      )}
 
-      {/* Cards grid */}
-      {plans.length === 0
-        ? (
-          <div className="flex flex-col items-center justify-center py-24 gap-4">
-            <div className="w-14 h-14 rounded-2xl bg-[#1c1c1e] border border-[#2a2a2c] flex items-center justify-center">
-              <FiList size={24} className="text-[#444]" />
-            </div>
-            <p className="text-[#444] text-base">No plans yet. Add your first plan.</p>
+      {/* Empty */}
+      {!isLoading && filtered.length === 0 && (
+        <div className="flex flex-col items-center justify-center py-24 gap-4">
+          <div className="w-14 h-14 rounded-2xl bg-[#1c1c1e] border border-[#2a2a2c] flex items-center justify-center">
+            <FiList size={24} className="text-[#444]" />
           </div>
-        )
-        : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {plans.map(plan => (
-              <PlanCard
-                key={plan.id}
-                plan={plan}
-                onEdit={setEditPlan}
-                onDelete={setDeletePlan}
-              />
+          <p className="text-[#444] text-base">No plans found. Create your first plan.</p>
+        </div>
+      )}
+
+      {/* Cards Grid */}
+      {!isLoading && paginated.length > 0 && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          {paginated.map(plan => (
+            <PlanCard key={plan._id} plan={plan} onViewDetails={setSelectedPlan} />
+          ))}
+        </div>
+      )}
+
+      {/* Pagination */}
+      {!isLoading && totalPages > 1 && (
+        <div className="flex items-center justify-between mt-6 px-1">
+          <span className="text-sm text-[#666]">
+            Showing {paginated.length} of {filtered.length} plans
+          </span>
+          <div className="flex items-center gap-1.5">
+            <button disabled={currentPage === 1} onClick={() => setCurrentPage(p => p - 1)}
+              className="px-3 py-2 rounded-xl bg-[#1c1c1e] border border-[#2a2a2c] text-sm text-[#aaa]
+                disabled:text-[#333] disabled:cursor-not-allowed hover:border-red-700/40 hover:text-red-400
+                transition-all disabled:hover:border-[#2a2a2c] disabled:hover:text-[#333]">
+              Prev
+            </button>
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
+              <button key={p} onClick={() => setCurrentPage(p)}
+                className={`w-9 h-9 rounded-xl text-sm transition-all
+                  ${p === currentPage
+                    ? 'bg-red-700 text-white font-semibold'
+                    : 'bg-[#1c1c1e] border border-[#2a2a2c] text-[#aaa] hover:border-red-700/40 hover:text-red-400'}`}>
+                {p}
+              </button>
             ))}
+            <button disabled={currentPage === totalPages} onClick={() => setCurrentPage(p => p + 1)}
+              className="px-3 py-2 rounded-xl bg-[#1c1c1e] border border-[#2a2a2c] text-sm text-[#aaa]
+                disabled:text-[#333] disabled:cursor-not-allowed hover:border-red-700/40 hover:text-red-400
+                transition-all disabled:hover:border-[#2a2a2c] disabled:hover:text-[#333]">
+              Next
+            </button>
           </div>
-        )}
+        </div>
+      )}
 
       {/* Modals */}
-      {addOpen    && <PlanModal mode="add"  plan={null}     onClose={() => setAddOpen(false)}   onSave={handleAdd}  />}
-      {editPlan   && <PlanModal mode="edit" plan={editPlan} onClose={() => setEditPlan(null)}   onSave={handleEdit} />}
-      {deletePlan && <DeleteModal plan={deletePlan}         onClose={() => setDeletePlan(null)} onConfirm={handleDelete} />}
+      <PlanModal plan={selectedPlan} onClose={() => setSelectedPlan(null)} />
+      {showCreateModal && (
+        <CreatePlanModal onClose={() => setShowCreateModal(false)} onSuccess={() => refetch()} />
+      )}
     </div>
   );
 };
