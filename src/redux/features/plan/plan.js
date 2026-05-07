@@ -17,8 +17,14 @@ const planApi = baseApi.injectEndpoints({
             }),
             invalidatesTags: ["Plan"],
         }),
-        
+        deletePlanSub: builder.mutation({
+            query: (id) => ({
+                url: `/plan/delete-plan/${id}`,
+                method: "DELETE"
+            }),
+            invalidatesTags: ["Plan"],
+        }),
     }),
 });
 
-export const { useGetAllPlansQuery , useCreateMealPlanMutation } = planApi;
+export const { useGetAllPlansQuery, useCreateMealPlanMutation , useDeletePlanSubMutation } = planApi;
