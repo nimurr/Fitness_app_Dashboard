@@ -228,19 +228,6 @@ const PromoList = () => {
         </div>
       </div>
 
-      {/* Stats */}
-      <div className="grid grid-cols-3 gap-4 mb-7">
-        {[
-          { label: 'Total Codes',   value: promos.length },
-          { label: 'Active',        value: promos.filter(p => isActive(p.endDate)).length },
-          { label: 'Expired',       value: promos.filter(p => !isActive(p.endDate)).length },
-        ].map(({ label, value }) => (
-          <div key={label} className="bg-[#1c1c1e] border border-[#2a2a2c] rounded-xl px-5 py-4">
-            <p className="text-[#555] text-xs uppercase tracking-widest mb-1.5">{label}</p>
-            <p className="text-[#f0f0f2] text-xl font-semibold">{value}</p>
-          </div>
-        ))}
-      </div>
 
       {/* Table */}
       <div className="bg-[#1c1c1e] border border-[#2a2a2c] rounded-2xl overflow-hidden">
