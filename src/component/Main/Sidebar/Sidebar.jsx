@@ -25,11 +25,11 @@ const sidebarItems = [
     name: "User List",
     icon: <HiMiniUserGroup className="size-6" />,
   },
-  {
-    path: "/meal-plan",
-    name: "Meal Plan",
-    icon: <GiMeal roup className="size-6" />,
-  },
+  // {
+  //   path: "/meal-plan",
+  //   name: "Meal Plan",
+  //   icon: <GiMeal roup className="size-6" />,
+  // },
   {
     path: "/subscriptions",
     name: "Subscriptions",
