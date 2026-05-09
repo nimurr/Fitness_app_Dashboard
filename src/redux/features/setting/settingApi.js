@@ -42,7 +42,7 @@ const settingApi = baseApi.injectEndpoints({
 
     getUserProfile: builder.query({
       query: () => ({
-        url: "/get-settings-data",
+        url: "/auth/my-profile",
         method: "GET",
         providesTags: ["Profile"],
       }),
@@ -60,7 +60,7 @@ const settingApi = baseApi.injectEndpoints({
 
     getAllNotification: builder.query({
       query: () => ({
-        url: "/notifications",
+        url: "/notification",
         method: "GET",
         providesTags: ["Notification"],
       }),
