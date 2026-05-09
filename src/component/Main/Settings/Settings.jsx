@@ -66,6 +66,7 @@ const Settings = () => {
   };
 
   const [updatePassword] = useChangePasswordMutation();
+
   const handleChangePassword = async (values) => {
 
     const { oldPassword, newPassword } = values;
@@ -79,13 +80,14 @@ const Settings = () => {
 
       const res = await updatePassword(formData).unwrap();
       console.log(res);
-      if (res?.code) {
+      if (res?.status == 200) {
         // navigate('')
         message.success(res?.message);
         setIsModalOpen(false);
       }
 
     } catch (error) {
+      message.error(error?.data?.message)
       console.log(error);
     }
 
