@@ -504,7 +504,9 @@
     <!-- ═══════════════════════════════════════ NAV ═══════════════════════════════════════ -->
     <nav>
         <div class="container flex items-center justify-between" style="padding-top:0.9rem;padding-bottom:0.9rem;">
-            <div class="logo">BLOOD<span>FIT</span></div>
+            <div class="logo">
+                <img class="max-w-32" src="Image/main_logo.png" alt="">
+            </div>
             <div class="hidden md:flex items-center gap-7">
                 <a href="#hero">Home</a>
                 <a href="#services">Services</a>
@@ -533,44 +535,55 @@
     </nav>
 
     <!-- ═══════════════════════════════════════ HERO ═══════════════════════════════════════ -->
-    <section id="hero" class="hero relative" style="padding-top:5rem;">
-        <!-- floating food icons -->
-        <span class="food-icon" style="top:8%;left:3%;">🫐</span>
-        <span class="food-icon" style="top:15%;left:12%;">🥩</span>
-        <span class="food-icon" style="top:70%;left:5%;">🥦</span>
-        <span class="food-icon" style="top:80%;left:15%;">🍳</span>
-        <span class="food-icon" style="top:10%;right:8%;">🥑</span>
-        <span class="food-icon" style="top:60%;right:4%;">🍇</span>
-        <span class="food-icon" style="bottom:10%;right:12%;">🥕</span>
-        <span class="food-icon" style="bottom:20%;left:8%;">🍎</span>
+    <br>
+    <div class="relative  overflow-hidden container  mt-24 ">
 
-        <div class="flex justify-center py-20 w-full">
-            <!-- Text side -->
-            <div class="  md:text-left  text-center">
-                <h1 class="hero-title text-white mb-6 text-center">
-                    Stop Guessing Your Diet.Start Eating ForYour Blood Type
-                </h1>
-                <div class="flex flex-wrap gap-3 justify-center ">
-                    <a href="#" class="btn-store">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
-                            <path d="M3 20.5v-17c0-.83 1-.83 1.5-.5l15 8.5-15 8.5c-.5.33-1.5.33-1.5-.5z" />
-                        </svg>
-                        <span>Google Play</span>
-                    </a>
-                    <a href="#" class="btn-store">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
-                            <path
-                                d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z" />
-                        </svg>
-                        <span>App Store</span>
-                    </a>
+        <section id="hero" style="background-image: url('Image/hero_banner.png');"
+            class="relative bg-cover bg-center overflow-hidden  rounded-2xl bg-no-repeat min-h-[100vh] flex  justify-center">
+
+            <!-- Dark Overlay -->
+            <div class="absolute inset-0 bg-black/50"></div>
+
+            <!-- Content -->
+            <div class="relative z-10 flex justify-center w-full px-4 py-20">
+
+                <div class="text-center ">
+
+                    <h1 class="text-white text-4xl md:text-6xl font-bold leading-tight mb-6">
+                        Stop Guessing Your Diet.
+                        <br>
+                        Start Eating For Your Blood Type
+                    </h1>
+
+                    <div class="flex flex-wrap gap-4 justify-center mt-8">
+
+                        <a href="#" class="btn-store  border border-white text-xl py-3">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
+                                <path d="M3 20.5v-17c0-.83 1-.83 1.5-.5l15 8.5-15 8.5c-.5.33-1.5.33-1.5-.5z" />
+                            </svg>
+                            <span>Google Play</span>
+                        </a>
+
+                        <a href="#" class="btn-store border border-white text-xl py-3">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
+                                <path
+                                    d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z" />
+                            </svg>
+                            <span>App Store</span>
+                        </a>
+
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="absolute bottom-0 left-0 right-0">
-            <img src="Image/iPhone-13.png" alt="" class="w-72 mx-auto">
-        </div>
-    </section>
+
+            <!-- Phone Image -->
+            <div class="absolute bottom-0 left-1/2 -translate-x-1/2 z-10">
+                <img src="Image/iPhone-13.png" alt="" class="w-72 lg:w-96">
+            </div>
+
+        </section>
+    </div>
+
 
     <!-- ═══════════════════════════════════════ BLUEPRINT ═══════════════════════════════════════ -->
     <section style="background-image: url('Image/Component78.png');"
@@ -643,41 +656,51 @@
     </section>
 
     <!-- ═══════════════════════════════════════ WHY CHOOSE US ═══════════════════════════════════════ -->
-    <section id="why" style="padding:5rem 0;background:var(--bg);">
-        <div class="container">
-            <h2 class="section-title text-center mb-2">Why <span class="accent">Choose</span> Us</h2>
-            <div class="red-divider mb-12"></div>
+    <section id="why" class="py-20 bg-[#0d0d0d]">
+        <div class="max-w-7xl mx-auto px-4">
 
-            <!-- Outer wrapper card -->
-            <div style="background:#1a1a1a;border-radius:24px;padding:1.5rem;">
+            <!-- Heading -->
+            <div class="text-center mb-14">
+                <h2 class="text-4xl md:text-5xl font-bold text-white">
+                    Why <span class="text-red-500">Choose</span> Us
+                </h2>
 
-                <!-- Row 1 -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
+                <div class="w-24 h-1 bg-red-500 mx-auto mt-4 rounded-full"></div>
+            </div>
 
-                    <!-- Cell 1 – Meals (with food image overflowing top-right) -->
-                    <div
-                        style="background:#111;border-radius:16px;padding:1.5rem;position:relative;overflow:hidden;min-height:200px;">
-                        <!-- Food image top right -->
-                        <div style="position:absolute;top:-10px;right:-10px;width:55%;height:120%;">
-                            <img src="Image/image10.png" alt="Food"
-                                style="width:100%;height:100%;object-fit:cover;border-radius:12px;">
+            <!-- Main Wrapper -->
+            <div class="bg-[#1a1a1a] rounded-[30px] p-4 md:p-6">
+
+                <!-- Top Grid -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
+
+                    <!-- Card 1 -->
+                    <div class="relative bg-[#111] rounded-2xl p-6 overflow-hidden min-h-[260px]">
+
+                        <!-- Image -->
+                        <div class="absolute top-0 right-0 w-[45%] sm:w-[55%] h-full">
+                            <img src="Image/image10.png" alt="" class="w-full h-full object-cover">
                         </div>
-                        <!-- Text bottom left -->
-                        <div style="position:relative;z-index:2;max-width:55%;">
-                            <h3 style="font-size:0.9rem;font-weight:800;margin-bottom:0.5rem;color:#fff;">Meals Built
-                                For Your Blood Type</h3>
-                            <p style="font-size:0.72rem;color:var(--muted);line-height:1.7;">Custom Meal Plans Based On
-                                Your Blood Type To Optimize Your Health And Energy.</p>
+
+                        <!-- Content -->
+                        <div class="relative z-10 max-w-[55%]">
+                            <h3 class="text-white text-xl md:text-2xl font-bold mb-3 leading-snug">
+                                Meals Built For Your Blood Type
+                            </h3>
+
+                            <p class="text-gray-400 text-sm md:text-base leading-relaxed">
+                                Custom Meal Plans Based On Your Blood Type To Optimize Your Health And Energy.
+                            </p>
                         </div>
                     </div>
 
-                    <!-- Cell 2 – Scanner -->
-                    <div
-                        style="background:#111;border-radius:16px;padding:1.5rem;min-height:200px;display:flex;flex-direction:column;justify-content:center;">
+                    <!-- Card 2 -->
+                    <div class="bg-[#111] rounded-2xl p-6 flex flex-col justify-center min-h-[260px]">
+
                         <!-- Icon -->
-                        <div
-                            style="width:56px;height:56px;background:rgba(180,20,20,0.8);border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:1.25rem;">
-                            <svg width="26" height="26" fill="none" stroke="#fff" stroke-width="1.8"
+                        <div class="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center mb-6">
+
+                            <svg width="28" height="28" fill="none" stroke="#fff" stroke-width="1.8"
                                 viewBox="0 0 24 24">
                                 <rect x="2" y="7" width="20" height="10" rx="2" />
                                 <path d="M6 7V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v2" />
@@ -685,64 +708,80 @@
                                 <path d="M8 12h8" />
                             </svg>
                         </div>
-                        <h3 style="font-size:0.9rem;font-weight:800;margin-bottom:0.5rem;color:#fff;">BloodFIT Meal
-                            Scanner</h3>
-                        <p style="font-size:0.72rem;color:var(--muted);line-height:1.7;">Instantly Check If Your Food Is
-                            Compatible With Your Blood Type For Smarter Food Choices.</p>
-                    </div>
 
+                        <h3 class="text-white text-xl md:text-2xl font-bold mb-3">
+                            BloodFIT Meal Scanner
+                        </h3>
+
+                        <p class="text-gray-400 text-sm md:text-base leading-relaxed">
+                            Instantly Check If Your Food Is Compatible With Your Blood Type For Smarter Food Choices.
+                        </p>
+                    </div>
                 </div>
 
-                <!-- Row 2 -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                <!-- Bottom Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
 
-                    <!-- Cell 3 – Keep Track (with chart image) -->
-                    <div style="background:#111;border-radius:16px;padding:1.5rem;overflow:hidden;">
-                        <h3 style="font-size:0.9rem;font-weight:800;margin-bottom:0.5rem;color:#fff;">Keep Track Of Your
-                            Fitness Journey</h3>
-                        <!-- Chart wave image -->
-                        <div style="margin-top:1rem;">
-                            <img src="Image/Vector 1.png" alt="Chart" style="width:100%;opacity:0.9;">
+                    <!-- Card 3 -->
+                    <div class="bg-[#111] rounded-2xl p-6 overflow-hidden">
+
+                        <h3 class="text-white text-xl md:text-2xl font-bold mb-4 leading-snug">
+                            Keep Track Of Your Fitness Journey
+                        </h3>
+
+                        <div class="mt-6">
+                            <img src="Image/Vector 1.png" alt="" class="w-full opacity-90">
                         </div>
                     </div>
 
-                    <!-- Cell 4 – Blood Type System (logo/icon grid) -->
-                    <div style="background:#111;border-radius:16px;padding:1.5rem;">
-                        <!-- 2x2 icon grid -->
-                        <div
-                            style="display:grid;grid-template-columns:1fr 1fr;gap:6px;width:60px;margin-bottom:1.25rem;">
-                            <div style="width:26px;height:26px;background:#fff;border-radius:4px;"></div>
-                            <div
-                                style="width:26px;height:26px;background:var(--red);border-radius:4px;transform:rotate(12deg);">
-                            </div>
-                            <div style="width:26px;height:26px;background:var(--red);border-radius:4px;"></div>
-                            <div style="width:26px;height:26px;background:#111;border-radius:4px;"></div>
+                    <!-- Card 4 -->
+                    <div class="bg-[#111] rounded-2xl p-6">
+
+                        <!-- Grid Icon -->
+                        <div class="grid grid-cols-2 gap-2 w-[70px] mb-6">
+
+                            <div class="w-8 h-8 bg-white rounded-md"></div>
+
+                            <div class="w-8 h-8 bg-red-500 rounded-md rotate-12"></div>
+
+                            <div class="w-8 h-8 bg-red-500 rounded-md"></div>
+
+                            <div class="w-8 h-8 border border-gray-700 rounded-md"></div>
                         </div>
-                        <h3 style="font-size:0.9rem;font-weight:800;margin-bottom:0.5rem;color:#fff;">A Complete Blood
-                            Type System</h3>
-                        <p style="font-size:0.72rem;color:var(--muted);line-height:1.7;">A Comprehensive Platform
-                            Combining Personalized Meals, Workouts, And Tracking To Keep You On Track.</p>
+
+                        <h3 class="text-white text-xl md:text-2xl font-bold mb-3 leading-snug">
+                            A Complete Blood Type System
+                        </h3>
+
+                        <p class="text-gray-400 text-sm md:text-base leading-relaxed">
+                            A Comprehensive Platform Combining Personalized Meals, Workouts, And Tracking To Keep You On
+                            Track.
+                        </p>
                     </div>
 
-                    <!-- Cell 5 – Workouts (dumbbell image) -->
-                    <div
-                        style="background:#111;border-radius:16px;padding:1.5rem;position:relative;overflow:hidden;min-height:200px;">
-                        <!-- Dumbbell image left side -->
-                        <div style="position:absolute;bottom:-10px;left:-10px;width:60%;">
-                            <img src="Image/image9.png" alt="Dumbbell" style="width:100%;object-fit:contain;">
+                    <!-- Card 5 -->
+                    <div class="relative bg-[#111] rounded-2xl p-6 overflow-hidden min-h-[260px]">
+
+                        <!-- Dumbbell -->
+                        <div class="absolute bottom-0 left-0 w-[55%]">
+                            <img src="Image/image9.png" alt="" class="w-full object-contain">
                         </div>
-                        <!-- Text right side -->
-                        <div style="position:relative;z-index:2;margin-left:auto;width:55%;text-align:right;">
-                            <h3 style="font-size:0.9rem;font-weight:800;margin-bottom:0.5rem;color:#fff;">Workouts
-                                Matched To Your Body & Goals</h3>
-                            <p style="font-size:0.72rem;color:var(--muted);line-height:1.7;">Tailored Workout Plans
-                                Designed To Align With Your Fitness Goals.</p>
+
+                        <!-- Content -->
+                        <div class="relative z-10 ml-auto w-[60%] text-right">
+
+                            <h3 class="text-white text-xl md:text-2xl font-bold mb-3 leading-snug">
+                                Workouts Matched To Your Body & Goals
+                            </h3>
+
+                            <p class="text-gray-400 text-sm md:text-base leading-relaxed">
+                                Tailored Workout Plans Designed To Align With Your Fitness Goals.
+                            </p>
                         </div>
                     </div>
 
                 </div>
             </div>
-
         </div>
     </section>
 
@@ -940,7 +979,9 @@
             <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
 
                 <div>
-                    <div class="logo mb-2">BLOOD<span>FIT</span></div>
+                    <div class="logo mb-2">
+                        <img class="max-w-32 mb-5" src="Image/main_logo.png" alt="">
+                    </div>
                     <p style="font-size:0.72rem;color:var(--muted);max-width:280px;line-height:1.7;">
                         <span style="font-weight:700;">EAT, GET, HEAL.</span><br>
                         Start Your Personalized Blood Type Nutrition And Workout Journey Today.

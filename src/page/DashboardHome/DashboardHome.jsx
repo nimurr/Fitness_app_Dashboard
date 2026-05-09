@@ -17,7 +17,7 @@ const DashboardHome = () => {
     <section>
       <DashboardOverviewStatus />
       <GrouthAndSubscriptionOverview />
-      <RecentSubscription />
+      {/* <RecentSubscription /> */}
     </section>
   );
 };

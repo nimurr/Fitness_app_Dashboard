@@ -24,7 +24,18 @@ const planApi = baseApi.injectEndpoints({
             }),
             invalidatesTags: ["Plan"],
         }),
+        getAllSubscriberList: builder.query({
+            query: () => ({
+                url: "/dashboard/subscriber-list",
+                method: "GET",
+                providesTags: ["Plan"],
+            }),
+        }),
     }),
 });
 
-export const { useGetAllPlansQuery, useCreateMealPlanMutation , useDeletePlanSubMutation } = planApi;
+export const {
+    useGetAllPlansQuery,
+    useCreateMealPlanMutation,
+    useDeletePlanSubMutation,
+    useGetAllSubscriberListQuery } = planApi;

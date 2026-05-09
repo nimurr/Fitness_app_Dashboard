@@ -328,12 +328,12 @@ export default function ReportAndIssue() {
                         >
                           View
                         </button>
-                        <button
+                        {/* <button
                           onClick={() => setSendTarget(realIndex)}
                           className="bg-[#2a2a2a] hover:bg-[#333] border border-[#3a3a3a] text-blue-400 hover:text-blue-300 text-xs rounded-md px-3 py-1.5 transition-colors"
                         >
                           Reply
-                        </button>
+                        </button> */}
                         <button
                           onClick={() => setDeleteTarget(realIndex)}
                           className="text-red-600 hover:text-red-500 transition-colors px-1.5 py-1 text-base"

@@ -43,7 +43,7 @@ const UserModal = ({ user, onClose }) => {
           {/* Avatar */}
           <div className="absolute -bottom-8 left-6">
             <img
-              src={user.image?.url}
+              src={user.image || "https://faisal5000.merinasib.shop/images/User_Avatar.png"}
               alt={user.firstName}
               className="w-16 h-16 rounded-xl border-2 border-red-700 object-cover shadow-lg"
             />
@@ -54,12 +54,12 @@ const UserModal = ({ user, onClose }) => {
         <div className="pt-12 px-6 pb-6">
           <div className="mb-5">
             <h3 className="text-[#f0f0f2] font-semibold text-lg leading-tight">
-              {user.firstName} {user.lastName}
+              {user.name} 
             </h3>
             <div className="flex items-center gap-2 mt-1.5">
               <StatusBadge status={user.status} />
               <span className="text-[#555] text-xs">·</span>
-              <span className="text-[#666] text-xs">{user.role}</span>
+              <span className="text-[#666] text-xs">{user.country}</span>
             </div>
           </div>
 
@@ -67,8 +67,11 @@ const UserModal = ({ user, onClose }) => {
             {[,
               { icon: FiMail, label: "Email", value: user.email },
               { icon: FiPhone, label: "Phone", value: user.phone },
-              { icon: FiMapPin, label: "Address", value: user.address_line1 },
-              { icon: FiCalendar, label: "Joined", value: formatDate(user.createdAt) },
+              { icon: FiMapPin, label: "Country", value: user.country },
+              { icon: FiMapPin, label: "Age", value: user.age },
+              { icon: FiMapPin, label: "Gender", value: user.gender },
+              { icon: FiMapPin, label: "Blood", value: user.bloodType },
+              { icon: FiCalendar, label: "Joined", value: formatDate(user.memberSince) },
             ].map(({ icon: Icon, label, value }) => (
               <div key={label}
                 className="flex items-center gap-3 bg-[#252527] rounded-xl px-4 py-3">
@@ -122,7 +125,7 @@ const UserRequestList = () => {
   const totalPages = Math.ceil(filtered?.length / PAGE_SIZE);
   const paginated = filtered?.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
 
-  const cols = ["#SI", "Full Name", "ROLE", "Email", "Phone", "Joined Date", "Action"];
+  const cols = ["#SI", "Full Name", "Email", "Country", "Phone", "Age", "Joined Date", "Action"];
 
   return (
     <div className="bg-[#111111] min-h-screen p-7 text-[#f0f0f2] w-full ">
@@ -187,25 +190,29 @@ const UserRequestList = () => {
 
               {/* First Name */}
               <div className="flex-1 px-4 py-4 text-xs border-r border-[#252527] flex items-center gap-2.5">
-                <img src={user.image?.url} alt={user.name}
+                <img src={user.image || "https://faisal5000.merinasib.shop/images/User_Avatar.png"} alt={user.name}
                   className="w-7 h-7 rounded-lg object-cover shrink-0" />
                 {user?.name || "- -"}
               </div>
               {/* Gender */}
-              <div className="flex-1 px-4 py-4 text-xs text-[#ccc] border-r border-[#252527]">
-                {user.role}
-              </div>
+
               {/* Email */}
               <div className="flex-1 px-4 py-4 text-xs text-[#ccc] border-r border-[#252527] truncate max-w-[140px]">
                 {user.email}
+              </div>
+              <div className="flex-1 px-4 py-4 text-xs text-[#ccc] border-r border-[#252527]">
+                {user.country}
               </div>
               {/* Phone */}
               <div className="flex-1 px-4 py-4 text-xs text-[#ccc] border-r border-[#252527]">
                 {user.phone}
               </div>
+              <div className="flex-1 px-4 py-4 text-xs text-[#ccc] border-r border-[#252527]">
+                {user.age}
+              </div>
               {/* Joined Date */}
               <div className="flex-1 px-4 py-4 text-xs text-[#ccc] border-r border-[#252527]">
-                {formatDate(user.createdAt)}
+                {formatDate(user.memberSince)}
               </div>
               {/* Action */}
               <div className="flex-1 px-4 py-4 flex justify-center">
